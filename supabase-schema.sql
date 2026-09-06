@@ -1,5 +1,5 @@
 -- ============================================================
--- 明记餐饮 ERP · Supabase 建表脚本
+-- 牛室炙烤牛排 · Supabase 建表脚本
 -- 用法：Supabase 控制台 → SQL Editor → New query → 粘贴全部 → Run
 -- 已经跑过第 1 版的，只需再跑「第 2 部分」即可（重复运行安全）。
 -- ============================================================
@@ -26,7 +26,7 @@ create table if not exists public.erp_users (
   email       text primary key,
   name        text,
   role        text not null default 'staff',   -- owner / area / manager / headchef / staff
-  outlet      text default 'b1',               -- 所属分店 id：ck / b1 ... b11
+  outlet      text default 'b1',               -- 所属分店 id：ck / b1
   active      boolean not null default true,
   created_at  timestamptz not null default now()
 );
