@@ -615,6 +615,22 @@ function initCloud(){
   }catch(e){CLOUD=false;}
   return CLOUD;
 }
+/* 云端写入队列：本地立即保存，云端在后台按 key 顺序合并写入，
+   避免每次操作都卡在网络等待上（界面秒响应，数据后台同步）。 */
+const _cloudWrites={};
+function queueCloudWrite(key,val){
+  const q=_cloudWrites[key]||(_cloudWrites[key]={pending:null,running:false});
+  q.pending=val;            // 连续修改只保留最新值（自动合并）
+  flushCloudWrite(key);
+}
+function flushCloudWrite(key){
+  const q=_cloudWrites[key];
+  if(!q||q.running||q.pending==null||!CLOUD||!_sb)return;
+  const val=q.pending; q.pending=null; q.running=true;
+  Promise.resolve(_sb.from(CLOUD_TABLE).upsert({key,value:JSON.parse(val),updated_at:new Date().toISOString()},{onConflict:'key'}))
+    .catch(()=>{})
+    .finally(()=>{q.running=false; if(q.pending!=null)flushCloudWrite(key);}); // 期间又有新改动就接着写
+}
 /* 统一存储接口：优先云端，永远在本地留一份（离线可用），云端失败自动回退 */
 const Store={
   async get(key){
@@ -627,14 +643,9 @@ const Store={
     try{const v=localStorage.getItem(key);return v?{value:v}:null;}catch(e){return null;}
   },
   async set(key,val){
-    let ok=false;
-    if(CLOUD){
-      try{const {error}=await _sb.from(CLOUD_TABLE).upsert({key,value:JSON.parse(val),updated_at:new Date().toISOString()},{onConflict:'key'});
-        if(error)throw error; ok=true;
-      }catch(e){ok=false;}
-    }
-    try{localStorage.setItem(key,val);}catch(e){}
-    return ok;
+    try{localStorage.setItem(key,val);}catch(e){}   // 先本地保存：界面立即可刷新
+    if(CLOUD)queueCloudWrite(key,val);              // 云端后台异步同步：不阻塞界面
+    return true;
   }
 };
 
