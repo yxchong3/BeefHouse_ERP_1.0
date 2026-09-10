@@ -164,23 +164,28 @@ const OUTLETS=[
 ];
 /* ===== 从营运档案提取的供应商→品项目录 + ENT菜单（可在库存/供应商里再增删）===== */
 const SUPPLIER_CATALOG={
-  "(菜)SUNNY KHOR FOOD TRADING SB":["Sawi 菜心","Sayur Raja (Di Wong Miao) 帝王苗","Kang Kung 翁菜","Daun Bawang 青葱/生葱","Coriander 元茜(香菜)","You Mak(Romain) 油麦","Qing Long 青龙菜","7 Tian Qi 田七","Salad Bulat 玻璃生菜","Cili Merah 红辣椒 （灯笼椒）","Cili Hijau 青辣椒","Ginger Old Halia Tua 老姜","Limau Nipis 酸柑","Tomato 番茄","Timun 黄瓜","Lobak Putih","Sweet Potato Leaf 番薯苗","Daun Kari 咖喱叶","Daun Selasih 九层塔","Daun Pandan 斑斓叶","Daun Asam 亚三叶","Arrow Root 粉葛","Watercress 西洋菜","Taugeh 芽菜","Tau Foo Jepun 日本豆腐","Tau Foo Kotak 盒豆腐","Tau Foo Goreng 豆腐卜","Kobis Bulat 包菜","Kacang Panjang 豆角","Kacang Bendi 羊角豆","Terong Panjang 茄子(长)","Peria 苦瓜","Petai 臭豆","Carrot 金笋（红萝卜）","Serai 香茅","Cili Api Merah 小红辣椒","Nai Pai 乃白菜","Telur （B） 鸡蛋","Labu Air 葫芦","Timun Tua 老黄瓜"],
-  "(猪)GRAND HARVEST FROZEN SB":["猪手/猪脚 Pork Leg","无皮五花肉 Pork Belly (No Skin）","后腿肉 （咕佬肉）Pork Whole Leg","肉碎 Minced Pork"],
-  "(鸡)GRAB FRESH TRADING SB":["(三杯鸡) Taiwan Chicken鸡二度 Chicken Whole Leg","菜园鸡 (Steamed Herb Chicken)Cone Fed Chicken","老鸡 Old Chicken","(南乳炸鸡) Fried Chicken白鸡 Normal Chicken","鸡翅膀 Chicken Wing","琵琶鸭 PiPa Duck"],
-  "(中央)TCY OKR SB":["Peanut 花生","保鲜膜 Cling Wrap","Cooking Rice Wine 兴兴发花雕酒","Beancurd Preserved 大石腐乳（南乳）","Santan (Kara)椰浆","Chili Bean Sauce 辣豆瓣酱","Desaus Chili Sauce 辣椒酱","MAGGIE Chili Sause 美极辣椒酱","MAGGIE Tomato Sause 美极番茄酱","Thai Chili Sos 妈巴侬牌泰国点鸡酱","Ajinamoto Monosodium 味精","Salt （Green） 双燕幼盐","Tapioca Starch (ABC) 木薯淀粉","Belacan （Ket Hoe) 吉和峇拉煎","MAGGIE Chicken Stock 美极鸡精粉","White Pepper Powder 鹰牌白胡椒粉","Tepung Merah (Babi Masin) 海阳牌加料五香粉","Tepung Curry Sotong Goreng 时钟牌英国咖喱粉","Dong Gui (Soup) 当归片(A) (青袋子)","Red Dates 红枣","Wolfberry(s) 枸杞（包）","Common Yam Slice 淮山（1）","Polygonatum Odoratum 玉竹","Dried Shrimp Udang Kering 虾米仔","Mergui Dried Fish 丹佬咸鱼（盒）","Ikan Masin Minyak 油浸马鲛咸鱼","Century Egg 皮蛋","Salted Egg 咸蛋","Cooking Oil 食用油","Jasmine Siam Special 5 Rice (Green) 白米","FIsh Mince 鱼胶","Taiwanese Chicken 三杯鸡","Lobak 肉卷","Tian Jin Preserved Vegetable 天津冬菜","Minced Pork冬菜猪肉","Curry Pork Ribs 咖喱排骨","Black Bean Pork Ribs 豉汁排骨","Chicke Marinade 炸鸡粉","Pork Marinade炸肉粉","Duck Marinade 腌鸭粉","Concentrated Soup 鲜汤","Fish Sauce 鱼汁","Duck Sauce 酸梅鸭酱","Taiwanese Sauce 三杯鸡酱","Stewed Sauce 卤猪脚酱","Belacan Sauce 马来栈酱","Nyonya Sauce 娘惹酱","Curry Sauce 咖喱酱","Kam Heong Sauce 金香酱","Sweet & Sour Sauce 咕佬肉酱","Black Bean SOS 炒鱼头酱","Spicy Bean Sauce （红酱蒸）辣酱蒸酱","Sayur Masin Hancur 菜脯（咸）","Sayur Manis Hancur 菜脯（甜）","麦芽糖 Maltose","Dry Chili 辣椒干","Onion 大葱","Shallot 葱头仔","Garlic 蒜米","Winfuel Thermogel 胶状燃料","Coarse Grain Sugar 粗白砂糖","Cili Powder 辣椒粉","Uniform 员工制服","Dried Shredded Squid 特选吊片丝","Food Wrap 保鲜膜","Soya Sauce A(Yellow) 蒸鱼生抽(黄盖)","Soya Sauce (Green) 普通生抽(青盖)","黑酱油 Black Sauce A1","蜻蜓牌蚝油 Qing Ting Oyster Sauce"],
-  "(鱼) Fish-LC FROZEN SB":["松鱼头 Big Head Carp","红非洲 Red Tilapia","(一条)白须公 Baung （Catfish）","大头虾 Scampi U5","老虎虾 Tiger Prawn"],
-  "Mayou& Lala(马友啦啦苏东)":["马友鱼 Threadfin（Mayou）@ 28/Kg","沙白 Signature Lala @ 5 / Pkt","啦啦 Kam Heong Lala @ 5 / Pkt","苏东 4/6 Sotong（No Skin）@ 27 / Pkt"],
-  "(啤酒) MHML TRADING SB":["黑狗 Guinness（640ml x 12 / ctn）","老虎 Tiger （640ml x 12 / ctn）","哈尔滨 Harbin"],
-  "(杯装凉水)SAN XIN":["竹蔗马蹄 Sugarcane","洋参菊花 Chrysanthemum","爱玉冰 Aiyu","百香果爱玉冰 Passion Aiyu"],
-  "(龙虎斑) DRAGON TASTE SEAFOOD WHOL":["龙虎斑头 Dragon / Tiger Grouper Head","龙虎斑鱼(整条) Dragon / Tiger Grouper"],
-  "(食油鸭沙白)":["食油 Cooking Oil @ 17Kg /Btl","鸭 Duck @ 2.1Kg Per Unit","沙白 Lala"],
-  "(包装) Packaging":["E & C - 40GG - 17 x 20A Singlet Bag (100pkt)","18 x 22 (Y）Plastic (80pkt)","KL - HD 6 x 9 1Kg (30pkt) 凉水打包袋（中）","HM 3 x 5 300g KM 酱料打包袋 （小）","HD 8 x 12 Plastic Bag 打包袋（大）","20 x 20 700g KM （Plastic Sheet） 打包用塑料纸","5.0mm Chopstick (Take Away) 打包用筷子","E & C - 70 x 70' Table Cloth (Red) 一次性桌布","Chinese Spoon (Take Away ) 打包用汤匙","Straw 吸管","NLT - PP Lunch Box (100pcs) 饭打包盒","BX-210 中型打包盒","E & C Rubber Band(1kg) 塑胶圈","Gas 煤气","Thermal Paper Roll"],
-  "(凉水汽水)冰块":["北紫草 Leong Shui （35pkt/ bdl）","100 Plus","Coca Cola","冰块 Ice"],
-  "(茶）Tea":["香片 Jasmine Tea","普洱 Pu ’Er","铁观音 Tie Guan Yin","茶王 Tea King","菊花 Chrysanthemum"],
-  "(洗洁精纸巾) Detergent & Tissue":["洗碗水 Dishwash","漂白水 Bleach","洗手液 Handwash","抹地水 Floor Cleaner","抹桌水 Table Cleaner"],
-  "(酱油）LAI YUAN SAUCE":["黄盖酱油（蒸鱼） Yellow Soy","青盖酱油（普通酱油）Green Soy","黑酱油 Black Sauce A1","蚝油 Oyster Sauce","Qing Ting Oyster Sauce 蜻蜓牌蚝油"],
+  "(中央)TCY OKR SB":["Cooking Oil 食用油","Cling Wrap 保鲜膜","MAGGIE Tomato Ketchup 美极番茄酱","DESAUS Tomato Sause DESAUS番茄酱","MAGGIE Chili Sause 美极辣椒酱","Desaus Chili Sauce 辣椒酱","Salt （Green） 双燕幼盐","Coarse Grain Sugar 粗白砂糖","England Watch Brand Curry Powder 时钟牌英国咖喱粉","KNORR Demi Glace B Sauce Mix 家乐牌黄褐色汁粉","KNORR Instant Chicken Gravy Mix 家乐牌即溶鸡肉汁","Flour Soda Tepung Soda 苏打粉","MAGGIE Chicken Stock 美极鸡精粉","ADOLPHS Meat Tenderizer (An Chi Fu) 松肉粉","Spices Paprika Powder 灯笼椒粉末","TM Prmium Sliced Mushroom 天马精选蘑菇片","TM Black Pepper Coarse 天马黑胡椒碎","Gula Merah (Brown Sugar) 黄糖","Bon Chef Breadcrumbs (Orange) 面包糠（橙）","MCM Nut Ground-Grated 花生碎","TM Corn Kernels 天马香甜包黍粒","Mixed Dry Fruits (Raisin A) 三色葡萄干","ALLDAY Cumin Powder 美天孜然粉","MAZZA Chopped Tomato 番茄粒（碎）","MAGGI Mushroom Soup 蘑菇汤","MAGGI Tomato Paste 浓缩番茄酱","BESTARI Crispy Fried Chicken (Hot & Spicy) 香脆炸鸡粉（香辣）","BESTARI Crispy Fried Chicken (Original) 香脆炸鸡粉（原味）","Sweet Potato Ball 地瓜球","Potato 马铃薯","Carrot 红萝卜","Onion 大葱","Jasmine Siam Special 5 Rice (Green) 白米","CAP SUNWHITE JASMINE Thailand Fragrant Rice 泰国新阳香米","Red Horse Orange Cordial Juice 红马橙汁","KNORR Mashed Potato Mix 家乐牌马铃薯泥","TELLY Mayo Boy All Purpose Dressing 美乃滋","TELLY Salad Dressing Thousand Island 千岛酱","Black Peppercorns 黑胡椒粒","AJINOMOTO Monosodium 味精","Brown Sugar 黄糖&黑糖","Margarine DAISY 马芝琳（人工奶油）","Tapioca Starch (ABC) 木薯淀粉","Multipurpose Flour BAKER'S CHOICE 面粉","Vacumm Bag 真空袋","Uniform 员工制服","Soya Sauce A(Yellow) 蒸鱼生抽(黄盖)","Soya Sauce (Green) 普通生抽(青盖)","黑酱油 Black Sauce A1","蜻蜓牌蚝油 Qing Ting Oyster Sauce","Delivery Charges 运送费"],
+  "(菜)JJX MART":["Garlic Peeled 去皮蒜米","Old Ginger 老姜","Yellow Onion 黄洋葱","Red Onion 洋葱 (加工）","Red Onion 洋葱 （未加工）","Spring Onion 青葱","Corriander 香菜","Tomato 番茄","Basil Leaf 罗勒叶","Daun Sup(Celery) 芹菜","Shitake Mushroom 香菇 （加工）","Shitake Mushroom 香菇（未加工）","Green Coral 莴苣菜（Salad bar）","Japanese Cucumber 日式黄瓜","Red Cabbage 紫甘蓝(Salad bar)","Potato 马铃薯","Carrot 红萝卜","White Raddish 白萝卜","Cauliflower 白花椰菜","Baby corn 小玉米","Asparagus 芦笋","Red Capsium 红灯笼椒","Yellow Capsium 黄灯笼椒","Green Capsium 青灯笼椒","Broccoli 花椰菜","Fuzuk 腐竹","Round Cabbage 包菜","Cucumber 黄瓜","Baby Romaine Lettuce 油麦菜","Oyster 生蚝","Egg - E 鸡蛋","Egg - D 鸡蛋","Red Chili 红辣椒","Lemon 柠檬","Cherry Tomato 樱桃番茄","Garlic 蒜米","Green Chili 青辣椒"],
+  "(牛肉)OCEAN J FROZEN":["韩式烤牛排 KALBI","肋眼牛扒 Brazil Ribeye （莎朗/西冷）","纽约客 Striploin","菲力牛扒 Tenderloin","羊嫩肩 Lamb Shoulder","牛小排 Short Ribeye"],
+  "(鸡)H&M TOP FOOD TRADING":["CHICKEN POPCORN","BONELESS BREAST 200G"],
+  "(鸡肉)GENERATION SEVEN ENTERPRISE":["CHICKEN CHOP 7","CHCIKEN CHOP 8 PCS","CHICKEN BREAST MEAT","DROMMET"],
+  "(杂货)SMB FROZEN FOOD SDN BHD":["HYFUN SHOESTRING 1KG","TATUA SOUR CREAM 500G","GUD CHOPPED TOMATO 2.55KG","KNORR MASHED POTATTO 2KG","MAGGI CREAM OF MUSHROON 1KG","TELLY THOUSAND ISLAND 1L","YOWE SLICED MUSHROOM 2.84KG","PRIMA CHICKEN STRIPS 500G","TATURA UNSALTED BUTTER 250G","KNORR TOMYAM PASTE 1.5KG","GUD TOMATO PASTE 2.2KG","BETARI TEP GORENG H&S 1KG","PRIMA CHICKEN PEPPERONI SLICED 500G","HUFUN SHOESTRING 1KG","GOURMET CHICKEN SANDWICH 1KG","SHANI WHIPPING CREAM 1L","FLORIDA PARMESAN GRATED 1KG","NATURE SEA TUNA CHUNK IN OIL 1.85KG","KIMBALL BBQ SAUCE 1KG","LC TARTAR SAUCE 3L"],
+  "(自助吧台）STANDARD FOOD SOLUTIONS":["SEAFOOD - SQUID WHOLE (INDIA) 6-10","SNACK - ENAK FISH** ROLL SMALL 50PCS","SNACK - PA VEGETABLE CURRY PUFF PREMIUM 25GM","DRESSING - TELLY MAYO BOY SAUCE (LS.)","SEAFOOD - BABY CRAB/ SAWAKANI","PASTA - BIONDI PASTA SPAGHETTI","MAMEE CHEF - CREAM OF MUSHROOM SOUP","SNACK - CHICKEN SAUSAGE COCKTAIL ORIGINAL (DINDING)","DAIRY - ARLA PIZZA TOPPING SHREDDED (LS.)","DAIRY - DEBIC UHT COOKING CREAM 20%","SEAFOOD - SQUID WHOLE (INDIA) 3 - 6","SNACK - CRUMBED CORN FISH NUGGET (PW.)","SNACK - CHICKEN NUGGET TEMPURA (MY CHOICE) (AYAMADU)","JAPANESE - HOUSE KARI ALA JEPANG ORIGINAL (HALAL)","OTHER - SANIA MARGERINE","OTHER - SUBI SEAFOOD FRIES","SEAFOOD - SQUID WHOLE (ARGENTINA) 300 -400","SNACK - BREADED SHRIMP 10PCS","SEAFOOD - OYSTER MEAT 9 - 11","Delivery Charges 运送费"],
+  "(物料）HNJ FOOD SUPPLY":["JAPAN KONACHA GREEN TEA LEAVE","(10 BRIX) KINGCAT COFFEE ESPRESSO","FRUZIX MANGO FLAVOURED PUDDING POWDER","FRUZIX STRAWBERRY FLAVOURED PUDDING POWDER","SABATINO BLACK TRUFFLE PASTE","FRUZIX DARK BROWN SUGAR FLAVORED TAPIOCA PEARL","CREAM MUSHROOM SAUCE (FOR SPAGHETTI)","HONDASHI BONITO SEASONING POWDER","FRUZIX CANNED RED BEANS","[FROZEN] FRUZIX QUICK-FROZEN MIXED TARO PASTE","FRUZIX BLACK TEA (ASSAM BLACK TEA)","CHINA FENGZIYA BONITO FLAKE","MYUNGGA AONORI KO (DRIED SEAWEED POWDER)","MYUNGGA FRIED CHICKEN COATING POWDER","SALT PEPPER SEASONING POWDER","FRUZIX MATCHA FLAVORED POWDER","BUONO SLICED BLACK OLIVES CAN","NON-DAIRY CREAMER","FRUZIX CARAMEL BRULEE POWDER","[FROZEN] FRUZIX MOCHI STRIPS (OVEN RESISTANT, PLAIN FLAVOR)","JAVASUPERFOOD MEAT TENDERIZER","(GOLD) GOLDEN CHEF PANKO BREAD CRUMBS","MAMEE INSTANT MASHED POTATO","HOUSE JAVA CURRY-ROUX","I-CON F55 FRUCTOSE SYRUP","Delivery Charges 运送费"],
+  "(双龙)DRAGON TASTE SEAFOOD":["BARRAMUNDI Fish Taufu 金目鲈鱼豆腐 （400G/PKT）","TOM YUM FISH BONE SOUP 冬阴鱼骨汤 （1KG/PKT）","SALMON FILLET PORTION 三文鱼切片 （180/220G-Frozen Clean）","VANNAMEI PRAWN (AC) 南美白虾 (700G_21-25PCS)","FROZEN RAW VANNAMEI TEMPURA PRAWN (5PKT)","TIGER PRAWN (FRESH) 16/20 (1KG)","ALASKA COD FISH NUGGET 阿拉斯加鳕鱼块 （1KG）","SQUID FLOWER 鱿鱼花 （1KG/PKT_20%GLZ)","FISH DORY FILLET 多利鱼片 （140/800G_20%GLZ)","SMALL PRAWN MEAT FROZEN (3PKT)"],
+  "（和丰）VO FON TRADING SDN BHD":["HOUSE KARI ALA 日本咖喱块","CUMIN POWDER 孜然粉","L-TIN NANAS BIJI 黄梨块（阿里山）","(SUNQUICK)ORANG JUICE 橙汁","SERBUK SODA BIRU 苏打粉（支）","JAM CHOCOLATE 巧克力酱","JAM STRAWBERRY 草莓酱","JAM PEANUT 花生酱","SPICE MIS HERBS WHOLE 混合草药","FRAGRANT RICE 新阳香米","GROUND NUT SAN TUNG 山东豆","TAPIOCA POWDER 地瓜粉","PREMIUM COCOA POWDER 可可粉","C-KNORR CARBONARA SAUCE 家乐奶油熏肉酱粉","OLIVE OIL POMACE 橄榄油","HON MIRIN 甜酒","LAVENDER MARINADE PASTE 薰衣草腌制鸡酱","BBQ SAUCE BBQ烧烤酱","C-(KNORR) BEEF STOCK PASTE (家乐)牛肉酱","C-(LKK) HOISIN SAUCE 李锦记海鲜酱","BALSAMIC VINEGAR OF MODENA VIVA意大利黑醋"],
+  "(广味香)SLL SEASONING":["11-1512-3KG 黄面包屑（Orange Breadcrumb)","15-0023-500G 胡椒盐 805 (PEPPER SEASONING P 805) 20KG/40PCK/CTN**H","11-1507-20KG 香鸡排外裹粉 (FRIED CHCIKEN COATING P) 20KG/1PCK/CTN","16-0051-500G 蚵仔面线汤粉 20KG/40PACK/CTN"],
+  "(披萨）BAB FOODS INDUSTRY (M) SDN ":["PLAIN PIZZA SEMI 60PCS/CTN"],
+  "（面包）FUJI BAEKRY SUPPLIES":["WHITE SANDWICH LOAF 500G","BABY BUN"],
+  "(地瓜球）GRAND MELTIQUE FOOD TRADIN":["地瓜球 （SWEET POTATO BALL) 1KG X 12 UNIT","五福圆 黑珍珠粉圆 （BLACK TAPIOCA PEARL) 1KG X 18UNIT"],
+  "(冰淇淋)CHONG BROTHERS":["6 LITER POLAR-R.CK.CT","6 LITER (NZ) - R.CK.CT","CONE","SCOOP"],
+  "(关东煮)X.K.L FROZEN FOOD SUPPLY":["STEAMBOAT SELECTION 6 IN 1","FOCOK 40PCS"],
+  "(果汁）BEST MARKETING &DISTRIBUTIO":["NUTRIFRES ORANGE JUICE (1CTN X 4BTL X 3.8KG)","NUTRIFRESLYCHEE GENERAL FLAVOUR (1CTN X 4BTL X 3.8KG)","NUTRIFRES PEACH PREMIUM FLAVOUR (1CTN X 4BTL X 3.8KG)"],
+  "(可乐机饮料）SAN LIAN TRADING SDN BHD":["COKE ZERO","FANTA GRAPE","SPRITE","COKE LESS SUGAR","FUZE TEA LEMON","CO2 FILLED TANK"],
+  "(包装) Packaging":["ROLL BAG 10 X 16","ROLL BAG 12 X 18","ROLL BAG 14 X 20","MULTIPURPOSE 2L","HOUSE WRAP","G.BAG 74 X 90 (Y)","SANITIZER 75%","MICROFIBER TOWEL 60 X 180","NEW SOFT TISSUE 2PLY","POP UP TISSUE","GARBAGE BAG 32 X 40"],
+  "(洗洁精纸巾) Detergent & Tissue":["洗碗水 Dishwash (10l)","HAND SOAP 10LIT","MULTIPURPOSE CLEANER 10LIT","MULTI FOLD DIPENSER"],
 };
-const MENU_ITEMS=["A001 招牌蒸鱼头 Signature","A002 酱蒸鱼头（辣椒）Spicy Paste Bean","A003 清蒸鱼头 Steamed with Ginger Silk","A004 炒松鱼头 Stir-Fried","A005 娘惹蒸鱼头 Steamed Nyonya Style","A006 豆豉面豉蒸（咸）鱼头Steamed with Black Bean Taucu","A007 油浸鱼头 Deep-Fried","A008 招牌蒸金凤鱼Signature","A009 酱蒸金凤鱼（辣椒）Steamed with Spicy Paste Bean","A010 清蒸金凤鱼 Steamed with Ginger Silk","A011 炒金凤鱼 Stir-Fried","A012 油浸金凤鱼 Deep-Fried","A013 娘惹蒸金凤鱼 Steamed with Nyonya Style","A014 娘惹炸金凤鱼 Deep-Fried with Nyonya Style","A015 咖喱金凤鱼 Curry Red Tilapia","A018 咖喱石斑鱼头 Grouper (Curry)","A020 红尾斑/红尾白须公 Catfish (Signature/Steamed)","A021 招牌蒸啦啦 Signature Lala","A022 金香啦啦 Kam Heong Lala","A023 招牌三鲜煲 Mixed Seafood Curry","A024 娘惹蒸苏东 Nyonya Style Squid","A025 招牌蒸苏东 Signature Squid","A026 炸苏东 Deep-Fried Squid","A027 椒盐苏东 Salt & Pepper Squid","A028 咸蛋苏东 Salted Egg Yolk Fried Squid","A029 招牌蒸大头虾 Signature King Prawn","A030 干煎大头虾 Pan-Fried King Prawn (min. 2只)","A031 招牌蒸老虎虾 Signature Tiger Prawn","A032 干煎老虎虾 Pan-Fried Tiger Prawn","A033 咸蛋炒老虎虾 Salted Egg Yolk Tiger Prawn","A034 卤猪脚 Signature Stewed Pork","A035 五香肉卷 Lo Bak","A036 南乳炸肉 Deep-Fried Marinated Pork","A037 咕噜肉 Sweet and Sour Pork","A038 冬菜蒸猪肉 Dong Choi Steam Meat Patty","A039 咖喱排骨 Curry Pork Ribs","A040 豉汁排骨 Black Bean Paste Pork Ribs","A042 琵琶鸭 Pipa Duck","A043 南乳炸鸡 Deep-Fried Marinated Chicken","A044 三杯鸡 Taiwan Style Chicken","A045 飞鸡翼 Chicken Wing with Sauce (min. 4只)","A046 纪子当归菜园鸡 Signature Herb Chicken","A047 田七 Tien Chi","A048 油麦 Yau Mak","A049 蕹菜 Kang Kung","A050 番薯叶 Sweet Potato Leaf","A051 帝王苗 Dai Wong Miu","A052 乃白 Nai Bak","A053 芽菜 Bean Sprout","A054 青龙菜 Qing Long","A055 四大天王 Spicy Mixed Vegetable","A057 招牌豆腐 Signature Fried Beancurd","A058 葱油豆腐 Scallion Steamed Beancurd","A059 铁板豆腐 Sizzling Beancurd","A060 荷包蛋 Poached Egg","A061 蒸蛋 Omelette","A062 大葱蛋 Onion Omelette","A063 苦瓜蛋 Bitter Gourd Omelette","A064 三皇蛋 Three Flavours Steam Egg","A065 蒸水蛋 Steamed Egg","A066 菜圃蒸蛋 Chai Po Omelette","A067 虾仁煎蛋 Shrimp Omelette","A067s 老黄瓜炖瘦肉 Chinese Melon Soup","A068 西洋菜汤炖瘦肉 Watercress Soup","A069 花生粉葛汤 Peanuts & Arrowroot Soup","B008 凉水（热/冷）Homemade (Hot/Cold)","B009 竹蔗马蹄 Sugarcane","B010 洋参菊花 Chrysanthemum","B011 金玉米 Ai Yu","B012 100号 100 Plus","B013 可乐 Coca Cola","B014 啤酒 Tiger","B015 黑啤酒 Guinness","B001 香片 Heong Pin","B002 普洱 Pou Lei","B003 铁观音 Tit Koon Yam","B004 菊普 Guk Pou","B005 寿玉 Sau Mei","B006 菊花 Chrysanthemum","Z01 卤猪脚饭 Signature Stewed Pork Rice","Z02 咕佬肉饭 Sweet and Sour Pork Rice","Z03 咖喱排骨饭 Curry Pork Rib Rice","Z04 豉汁排骨饭Black Bean Paste Pork Rib Rice","Z05 炒饭 Fried Rice","Z06 虾仁炒饭 Shrimp Fried Rice","Z07 叁巴炒饭 Sambal Fried Rice","Z08 海鲜炒饭 Seafood Fried Rice","Z09 咸鱼炒饭 Salted Fish Fried Rice","Z11 冬菜蒸猪肉饭 Dong Choi Steam Meat Patty Rice","Z13 肉碎豆腐饭 Beancurd w Minced Pork Rice","C01 咖喱杂菜 Curry Mix Vegetabales","其他 Others"];
+const MENU_ITEMS=["B1 纯爱自助吧 JUST LOVE BUFFET","B2 炸纽约客牛肉块 FRIED CHUNK STEAK","B3 纽约客牛扒 STRIPLOIN STEAK","B4 莎朗牛扒 SIRLOIN STEAK","B5 骰子菲力牛扒 FILLET CUBE DICE","B6 菲力牛扒 FILLET MIGNON STEAK","B7 经典炸鸡排 FRIED CHICKEN CUTLET","B8 香煎鸡腿扒 GRILLED CHICKEN CHOP","B9 嫩肩羊扒 TENDER LAMB","B10 酥炸鱼排 FRIED FISH CHOP","B11 火烤鱿鱼排 GRILL SQUID BODY","B12 酥炸综合海鲜 MIX FRIED SEAFOOD","B13 香煎鲑鱼排 GRILL SALMON","C1 日式天妇罗炸虾 FRIED SHRIMP","C2 香酥炸鱼块 FRIED FISH NUGGET","C3 酥炸鱿鱼花 FRIED SQUID","D1 招牌熊熊奶茶 BEAR MILK TEA","D2 特调红茶 BLACK TEA","D3 特调奶茶 MILK TEA","D4 经典珍珠奶茶 BUBBLE TEA","其他 Others"];
 
 /* ===== 菜品成本表目录（来自 Pending 档案：菜品成本表+单独算）===== */
 const DISH_CATALOG=[
@@ -469,59 +474,300 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
+const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
   const items=[
-    {id:1,name:"鸡腿肉 Chicken Leg",unit:"kg",buyUnit:"箱",conv:10,qty:38,cost:9.50,cat:"肉类",par:20,yield:85,batches:[{qty:20,exp:"2026-09-05",in:"2026-08-22"},{qty:18,exp:"2026-09-10",in:"2026-08-25"}]},
-    {id:2,name:"沙白 Clams",unit:"kg",buyUnit:"kg",conv:1,qty:10,cost:14.00,cat:"海鲜",par:8,yield:70,batches:[{qty:10,exp:"2026-08-29",in:"2026-08-25"}]},
-    {id:3,name:"松鱼头 Fish Head",unit:"pcs",buyUnit:"pcs",conv:1,qty:7,cost:18.00,cat:"海鲜",par:6,yield:100,batches:[{qty:7,exp:"2026-08-30",in:"2026-08-26"}]},
-    {id:4,name:"猪脚 Pork Trotter",unit:"kg",buyUnit:"kg",conv:1,qty:16,cost:12.00,cat:"肉类",par:10,yield:90,batches:[{qty:16,exp:"2026-09-02",in:"2026-08-16"}]},
-    {id:5,name:"豆腐 Tofu",unit:"pcs",buyUnit:"pack",conv:20,qty:50,cost:1.20,cat:"其他",par:30,yield:100,batches:[{qty:50,exp:"2026-08-31",in:"2026-08-26"}]},
-    {id:6,name:"南乳 Beancurd Paste",unit:"jar",buyUnit:"箱",conv:12,qty:3,cost:8.50,cat:"酱料",par:4,yield:100,batches:[{qty:3,exp:"2027-01-10",in:"2026-06-12"}]},
-    {id:7,name:"绍兴酒 Shaoxing Wine",unit:"btl",buyUnit:"箱",conv:12,qty:8,cost:15.00,cat:"酱料",par:5,yield:100,batches:[{qty:8,exp:"2027-06-01",in:"2026-07-05"}]},
-    {id:8,name:"冬菜 Preserved Veg",unit:"pack",buyUnit:"箱",conv:24,qty:14,cost:3.50,cat:"其他",par:8,yield:100,batches:[{qty:14,exp:"2026-12-01",in:"2026-08-23"}]},
+    {id:1,name:"Cooking Oil 食用油",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:95.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:2,name:"Cling Wrap 保鲜膜",unit:"roll",buyUnit:"roll",conv:1,qty:0,cost:39.8,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:3,name:"MAGGIE Tomato Ketchup 美极番茄酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:9.7,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:4,name:"DESAUS Tomato Sause DESAUS番茄酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:6.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:5,name:"MAGGIE Chili Sause 美极辣椒酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:10.4,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:6,name:"Desaus Chili Sauce 辣椒酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:6.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:7,name:"Salt （Green） 双燕幼盐",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:8.5,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:8,name:"Coarse Grain Sugar 粗白砂糖",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:2.85,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:9,name:"England Watch Brand Curry Powder 时钟牌英国咖喱粉",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:7.1,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:10,name:"KNORR Demi Glace B Sauce Mix 家乐牌黄褐色汁粉",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:180.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:11,name:"KNORR Instant Chicken Gravy Mix 家乐牌即溶鸡肉汁",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:210.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:12,name:"Flour Soda Tepung Soda 苏打粉",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:4.2,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:13,name:"MAGGIE Chicken Stock 美极鸡精粉",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:18.6,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:14,name:"ADOLPHS Meat Tenderizer (An Chi Fu) 松肉粉",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:75.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:15,name:"Spices Paprika Powder 灯笼椒粉末",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:27.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:16,name:"TM Prmium Sliced Mushroom 天马精选蘑菇片",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:102.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:17,name:"TM Black Pepper Coarse 天马黑胡椒碎",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:21.4,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:18,name:"Gula Merah (Brown Sugar) 黄糖",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:69.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:19,name:"Bon Chef Breadcrumbs (Orange) 面包糠（橙）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:84.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:20,name:"MCM Nut Ground-Grated 花生碎",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:98.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:21,name:"TM Corn Kernels 天马香甜包黍粒",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:47.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:22,name:"Mixed Dry Fruits (Raisin A) 三色葡萄干",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:172.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:23,name:"ALLDAY Cumin Powder 美天孜然粉",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:58.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:24,name:"MAZZA Chopped Tomato 番茄粒（碎）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:22.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:25,name:"MAGGI Mushroom Soup 蘑菇汤",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:187.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:26,name:"MAGGI Tomato Paste 浓缩番茄酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:248.4,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:27,name:"BESTARI Crispy Fried Chicken (Hot & Spicy) 香脆炸鸡粉（香辣）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:9.5,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:28,name:"BESTARI Crispy Fried Chicken (Original) 香脆炸鸡粉（原味）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:99.6,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:29,name:"Sweet Potato Ball 地瓜球",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:21.5,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:30,name:"Potato 马铃薯",unit:"box",buyUnit:"box",conv:1,qty:0,cost:4.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:31,name:"Carrot 红萝卜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:4.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:32,name:"Onion 大葱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:30.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:33,name:"Jasmine Siam Special 5 Rice (Green) 白米",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:39.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:34,name:"CAP SUNWHITE JASMINE Thailand Fragrant Rice 泰国新阳香米",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:63.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:35,name:"Red Horse Orange Cordial Juice 红马橙汁",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:12.9,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:36,name:"KNORR Mashed Potato Mix 家乐牌马铃薯泥",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:60.9,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:37,name:"TELLY Mayo Boy All Purpose Dressing 美乃滋",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:21.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:38,name:"TELLY Salad Dressing Thousand Island 千岛酱",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:12.3,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:39,name:"Black Peppercorns 黑胡椒粒",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:53.5,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:40,name:"AJINOMOTO Monosodium 味精",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:274.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:41,name:"Brown Sugar 黄糖&黑糖",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:4.8,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:42,name:"Margarine DAISY 马芝琳（人工奶油）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:68.5,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:43,name:"Tapioca Starch (ABC) 木薯淀粉",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:4.25,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:44,name:"Multipurpose Flour BAKER'S CHOICE 面粉",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:3.35,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:45,name:"Vacumm Bag 真空袋",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:12.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:46,name:"Uniform 员工制服",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:19.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:47,name:"Soya Sauce A(Yellow) 蒸鱼生抽(黄盖)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:25.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:48,name:"Soya Sauce (Green) 普通生抽(青盖)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:12.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:49,name:"黑酱油 Black Sauce A1",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:30.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:50,name:"蜻蜓牌蚝油 Qing Ting Oyster Sauce",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:23.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:51,name:"Delivery Charges 运送费",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:35.0,cat:"中央",supplier:"(中央)TCY OKR SB",par:0,yield:100,batches:[]},
+    {id:52,name:"Garlic Peeled 去皮蒜米",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:5.33,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:53,name:"Old Ginger 老姜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:6.28,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:54,name:"Yellow Onion 黄洋葱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:3.09,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:55,name:"Red Onion 洋葱 (加工）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:2.99,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:56,name:"Red Onion 洋葱 （未加工）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:3.06,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:57,name:"Spring Onion 青葱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:4.18,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:58,name:"Corriander 香菜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:3.67,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:59,name:"Tomato 番茄",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:15.35,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:60,name:"Basil Leaf 罗勒叶",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:6.28,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:61,name:"Daun Sup(Celery) 芹菜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:79.93,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:62,name:"Shitake Mushroom 香菇 （加工）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:84.92,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:63,name:"Shitake Mushroom 香菇（未加工）",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:9.19,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:64,name:"Green Coral 莴苣菜（Salad bar）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:6.64,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:65,name:"Japanese Cucumber 日式黄瓜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:7.55,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:66,name:"Red Cabbage 紫甘蓝(Salad bar)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:5.93,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:67,name:"White Raddish 白萝卜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:7.65,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:68,name:"Cauliflower 白花椰菜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:3.45,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:69,name:"Baby corn 小玉米",unit:"bag",buyUnit:"bag",conv:1,qty:0,cost:10.93,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:70,name:"Asparagus 芦笋",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:7.34,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:71,name:"Red Capsium 红灯笼椒",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:14.71,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:72,name:"Yellow Capsium 黄灯笼椒",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:12.77,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:73,name:"Green Capsium 青灯笼椒",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:10.97,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:74,name:"Broccoli 花椰菜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:9.4,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:75,name:"Fuzuk 腐竹",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:11.8,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:76,name:"Round Cabbage 包菜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:5.17,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:77,name:"Cucumber 黄瓜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:3.0,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:78,name:"Baby Romaine Lettuce 油麦菜",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:3.92,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:79,name:"Oyster 生蚝",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:1.2,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:80,name:"Egg - E 鸡蛋",unit:"tray",buyUnit:"tray",conv:1,qty:0,cost:2.12,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:81,name:"Egg - D 鸡蛋",unit:"tray",buyUnit:"tray",conv:1,qty:0,cost:5.13,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:82,name:"Red Chili 红辣椒",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:7.54,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:83,name:"Lemon 柠檬",unit:"nos",buyUnit:"nos",conv:1,qty:0,cost:6.58,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:84,name:"Cherry Tomato 樱桃番茄",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:8.04,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:85,name:"Garlic 蒜米",unit:"nos",buyUnit:"nos",conv:1,qty:0,cost:2.0,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:86,name:"Green Chili 青辣椒",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:6.95,cat:"菜",supplier:"(菜)JJX MART",par:0,yield:100,batches:[]},
+    {id:87,name:"韩式烤牛排 KALBI",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:89.0,cat:"牛肉",supplier:"(牛肉)OCEAN J FROZEN",par:0,yield:100,batches:[]},
+    {id:88,name:"肋眼牛扒 Brazil Ribeye （莎朗/西冷）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:49.0,cat:"牛肉",supplier:"(牛肉)OCEAN J FROZEN",par:0,yield:100,batches:[]},
+    {id:89,name:"纽约客 Striploin",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:27.5,cat:"牛肉",supplier:"(牛肉)OCEAN J FROZEN",par:0,yield:100,batches:[]},
+    {id:90,name:"菲力牛扒 Tenderloin",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:49.0,cat:"牛肉",supplier:"(牛肉)OCEAN J FROZEN",par:0,yield:100,batches:[]},
+    {id:91,name:"羊嫩肩 Lamb Shoulder",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:39.0,cat:"牛肉",supplier:"(牛肉)OCEAN J FROZEN",par:0,yield:100,batches:[]},
+    {id:92,name:"牛小排 Short Ribeye",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:59.0,cat:"牛肉",supplier:"(牛肉)OCEAN J FROZEN",par:0,yield:100,batches:[]},
+    {id:93,name:"CHICKEN POPCORN",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:51.0,cat:"鸡",supplier:"(鸡)H&M TOP FOOD TRADING",par:0,yield:100,batches:[]},
+    {id:94,name:"BONELESS BREAST 200G",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:40.0,cat:"鸡",supplier:"(鸡)H&M TOP FOOD TRADING",par:0,yield:100,batches:[]},
+    {id:95,name:"CHICKEN CHOP 7",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:16.5,cat:"鸡肉",supplier:"(鸡肉)GENERATION SEVEN ENTERPRISE",par:0,yield:100,batches:[]},
+    {id:96,name:"CHCIKEN CHOP 8 PCS",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:16.5,cat:"鸡肉",supplier:"(鸡肉)GENERATION SEVEN ENTERPRISE",par:0,yield:100,batches:[]},
+    {id:97,name:"CHICKEN BREAST MEAT",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:13.5,cat:"鸡肉",supplier:"(鸡肉)GENERATION SEVEN ENTERPRISE",par:0,yield:100,batches:[]},
+    {id:98,name:"DROMMET",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:10.0,cat:"鸡肉",supplier:"(鸡肉)GENERATION SEVEN ENTERPRISE",par:0,yield:100,batches:[]},
+    {id:99,name:"HYFUN SHOESTRING 1KG",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:6.0,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:100,name:"TATUA SOUR CREAM 500G",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:4.55,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:101,name:"GUD CHOPPED TOMATO 2.55KG",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:4.09,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:102,name:"KNORR MASHED POTATTO 2KG",unit:"box",buyUnit:"box",conv:1,qty:0,cost:6.07,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:103,name:"MAGGI CREAM OF MUSHROON 1KG",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:4.94,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:104,name:"TELLY THOUSAND ISLAND 1L",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:3.42,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:105,name:"YOWE SLICED MUSHROOM 2.84KG",unit:"tin",buyUnit:"tin",conv:1,qty:0,cost:17.97,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:106,name:"PRIMA CHICKEN STRIPS 500G",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:6.21,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:107,name:"TATURA UNSALTED BUTTER 250G",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:86.72,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:108,name:"KNORR TOMYAM PASTE 1.5KG",unit:"tab",buyUnit:"tab",conv:1,qty:0,cost:101.99,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:109,name:"GUD TOMATO PASTE 2.2KG",unit:"tin",buyUnit:"tin",conv:1,qty:0,cost:18.38,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:110,name:"BETARI TEP GORENG H&S 1KG",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:6.76,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:111,name:"PRIMA CHICKEN PEPPERONI SLICED 500G",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:9.94,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:112,name:"HUFUN SHOESTRING 1KG",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:6.0,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:113,name:"GOURMET CHICKEN SANDWICH 1KG",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:26.36,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:114,name:"SHANI WHIPPING CREAM 1L",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:9.25,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:115,name:"FLORIDA PARMESAN GRATED 1KG",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:10.72,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:116,name:"NATURE SEA TUNA CHUNK IN OIL 1.85KG",unit:"tin",buyUnit:"tin",conv:1,qty:0,cost:5.06,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:117,name:"KIMBALL BBQ SAUCE 1KG",unit:"pct",buyUnit:"pct",conv:1,qty:0,cost:7.4,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:118,name:"LC TARTAR SAUCE 3L",unit:"tab",buyUnit:"tab",conv:1,qty:0,cost:8.93,cat:"杂货",supplier:"(杂货)SMB FROZEN FOOD SDN BHD",par:0,yield:100,batches:[]},
+    {id:119,name:"SEAFOOD - SQUID WHOLE (INDIA) 6-10",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:13.8,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:120,name:"SNACK - ENAK FISH** ROLL SMALL 50PCS",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:16.8,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:121,name:"SNACK - PA VEGETABLE CURRY PUFF PREMIUM 25GM",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:56.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:122,name:"DRESSING - TELLY MAYO BOY SAUCE (LS.)",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:21.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:123,name:"SEAFOOD - BABY CRAB/ SAWAKANI",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:6.5,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:124,name:"PASTA - BIONDI PASTA SPAGHETTI",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:54.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:125,name:"MAMEE CHEF - CREAM OF MUSHROOM SOUP",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:28.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:126,name:"SNACK - CHICKEN SAUSAGE COCKTAIL ORIGINAL (DINDING)",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:12.5,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:127,name:"DAIRY - ARLA PIZZA TOPPING SHREDDED (LS.)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:29.8,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:128,name:"DAIRY - DEBIC UHT COOKING CREAM 20%",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:118.2,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:129,name:"SEAFOOD - SQUID WHOLE (INDIA) 3 - 6",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:16.5,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:130,name:"SNACK - CRUMBED CORN FISH NUGGET (PW.)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:94.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:131,name:"SNACK - CHICKEN NUGGET TEMPURA (MY CHOICE) (AYAMADU)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:15.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:132,name:"JAPANESE - HOUSE KARI ALA JEPANG ORIGINAL (HALAL)",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:53.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:133,name:"OTHER - SANIA MARGERINE",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:125.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:134,name:"OTHER - SUBI SEAFOOD FRIES",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:62.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:135,name:"SEAFOOD - SQUID WHOLE (ARGENTINA) 300 -400",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:100.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:136,name:"SNACK - BREADED SHRIMP 10PCS",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:15.5,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:137,name:"SEAFOOD - OYSTER MEAT 9 - 11",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:10.0,cat:"自助吧台",supplier:"(自助吧台）STANDARD FOOD SOLUTIONS",par:0,yield:100,batches:[]},
+    {id:138,name:"JAPAN KONACHA GREEN TEA LEAVE",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:58.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:139,name:"(10 BRIX) KINGCAT COFFEE ESPRESSO",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:29.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:140,name:"FRUZIX MANGO FLAVOURED PUDDING POWDER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:21.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:141,name:"FRUZIX STRAWBERRY FLAVOURED PUDDING POWDER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:29.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:142,name:"SABATINO BLACK TRUFFLE PASTE",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:126.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:143,name:"FRUZIX DARK BROWN SUGAR FLAVORED TAPIOCA PEARL",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:150.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:144,name:"CREAM MUSHROOM SAUCE (FOR SPAGHETTI)",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:19.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:145,name:"HONDASHI BONITO SEASONING POWDER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:25.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:146,name:"FRUZIX CANNED RED BEANS",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:8.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:147,name:"[FROZEN] FRUZIX QUICK-FROZEN MIXED TARO PASTE",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:9.5,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:148,name:"FRUZIX BLACK TEA (ASSAM BLACK TEA)",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:885.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:149,name:"CHINA FENGZIYA BONITO FLAKE",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:31.5,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:150,name:"MYUNGGA AONORI KO (DRIED SEAWEED POWDER)",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:11.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:151,name:"MYUNGGA FRIED CHICKEN COATING POWDER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:35.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:152,name:"SALT PEPPER SEASONING POWDER",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:28.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:153,name:"FRUZIX MATCHA FLAVORED POWDER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:31.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:154,name:"BUONO SLICED BLACK OLIVES CAN",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:50.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:155,name:"NON-DAIRY CREAMER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:16.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:156,name:"FRUZIX CARAMEL BRULEE POWDER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:29.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:157,name:"[FROZEN] FRUZIX MOCHI STRIPS (OVEN RESISTANT, PLAIN FLAVOR)",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:17.5,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:158,name:"JAVASUPERFOOD MEAT TENDERIZER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:24.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:159,name:"(GOLD) GOLDEN CHEF PANKO BREAD CRUMBS",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:8.5,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:160,name:"MAMEE INSTANT MASHED POTATO",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:58.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:161,name:"HOUSE JAVA CURRY-ROUX",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:39.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:162,name:"I-CON F55 FRUCTOSE SYRUP",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:30.0,cat:"物料",supplier:"(物料）HNJ FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:163,name:"BARRAMUNDI Fish Taufu 金目鲈鱼豆腐 （400G/PKT）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:21.0,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:164,name:"TOM YUM FISH BONE SOUP 冬阴鱼骨汤 （1KG/PKT）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:12.0,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:165,name:"SALMON FILLET PORTION 三文鱼切片 （180/220G-Frozen Clean）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:65.16,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:166,name:"VANNAMEI PRAWN (AC) 南美白虾 (700G_21-25PCS)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:35.6,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:167,name:"FROZEN RAW VANNAMEI TEMPURA PRAWN (5PKT)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:19.0,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:168,name:"TIGER PRAWN (FRESH) 16/20 (1KG)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:60.0,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:169,name:"ALASKA COD FISH NUGGET 阿拉斯加鳕鱼块 （1KG）",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:35.1,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:170,name:"SQUID FLOWER 鱿鱼花 （1KG/PKT_20%GLZ)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:23.0,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:171,name:"FISH DORY FILLET 多利鱼片 （140/800G_20%GLZ)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:15.8,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:172,name:"SMALL PRAWN MEAT FROZEN (3PKT)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:16.5,cat:"双龙",supplier:"(双龙)DRAGON TASTE SEAFOOD",par:0,yield:100,batches:[]},
+    {id:173,name:"HOUSE KARI ALA 日本咖喱块",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:64.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:174,name:"CUMIN POWDER 孜然粉",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:7.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:175,name:"L-TIN NANAS BIJI 黄梨块（阿里山）",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:6.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:176,name:"(SUNQUICK)ORANG JUICE 橙汁",unit:"btl",buyUnit:"btl",conv:1,qty:0,cost:13.8,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:177,name:"SERBUK SODA BIRU 苏打粉（支）",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:1.7,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:178,name:"JAM CHOCOLATE 巧克力酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:86.25,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:179,name:"JAM STRAWBERRY 草莓酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:28.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:180,name:"JAM PEANUT 花生酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:67.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:181,name:"SPICE MIS HERBS WHOLE 混合草药",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:10.7,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:182,name:"FRAGRANT RICE 新阳香米",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:64.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:183,name:"GROUND NUT SAN TUNG 山东豆",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:15.3,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:184,name:"TAPIOCA POWDER 地瓜粉",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:8.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:185,name:"PREMIUM COCOA POWDER 可可粉",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:57.4,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:186,name:"C-KNORR CARBONARA SAUCE 家乐奶油熏肉酱粉",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:61.8,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:187,name:"OLIVE OIL POMACE 橄榄油",unit:"btl",buyUnit:"btl",conv:1,qty:0,cost:45.0,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:188,name:"HON MIRIN 甜酒",unit:"btl",buyUnit:"btl",conv:1,qty:0,cost:17.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:189,name:"LAVENDER MARINADE PASTE 薰衣草腌制鸡酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:26.1,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:190,name:"BBQ SAUCE BBQ烧烤酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:26.8,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:191,name:"C-(KNORR) BEEF STOCK PASTE (家乐)牛肉酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:49.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:192,name:"C-(LKK) HOISIN SAUCE 李锦记海鲜酱",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:28.5,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:193,name:"BALSAMIC VINEGAR OF MODENA VIVA意大利黑醋",unit:"btl",buyUnit:"btl",conv:1,qty:0,cost:18.8,cat:"和丰",supplier:"（和丰）VO FON TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:194,name:"11-1512-3KG 黄面包屑（Orange Breadcrumb)",unit:"set",buyUnit:"set",conv:1,qty:0,cost:1.0,cat:"广味香",supplier:"(广味香)SLL SEASONING",par:0,yield:100,batches:[]},
+    {id:195,name:"15-0023-500G 胡椒盐 805 (PEPPER SEASONING P 805) 20KG/40PCK/CTN**H",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:1.0,cat:"广味香",supplier:"(广味香)SLL SEASONING",par:0,yield:100,batches:[]},
+    {id:196,name:"11-1507-20KG 香鸡排外裹粉 (FRIED CHCIKEN COATING P) 20KG/1PCK/CTN",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:1.0,cat:"广味香",supplier:"(广味香)SLL SEASONING",par:0,yield:100,batches:[]},
+    {id:197,name:"16-0051-500G 蚵仔面线汤粉 20KG/40PACK/CTN",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:1.0,cat:"广味香",supplier:"(广味香)SLL SEASONING",par:0,yield:100,batches:[]},
+    {id:198,name:"PLAIN PIZZA SEMI 60PCS/CTN",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:240.0,cat:"披萨",supplier:"(披萨）BAB FOODS INDUSTRY (M) SDN ",par:0,yield:100,batches:[]},
+    {id:199,name:"WHITE SANDWICH LOAF 500G",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:3.4,cat:"面包",supplier:"（面包）FUJI BAEKRY SUPPLIES",par:0,yield:100,batches:[]},
+    {id:200,name:"BABY BUN",unit:"unit",buyUnit:"unit",conv:1,qty:0,cost:3.66,cat:"面包",supplier:"（面包）FUJI BAEKRY SUPPLIES",par:0,yield:100,batches:[]},
+    {id:201,name:"地瓜球 （SWEET POTATO BALL) 1KG X 12 UNIT",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:18.5,cat:"地瓜球",supplier:"(地瓜球）GRAND MELTIQUE FOOD TRADIN",par:0,yield:100,batches:[]},
+    {id:202,name:"五福圆 黑珍珠粉圆 （BLACK TAPIOCA PEARL) 1KG X 18UNIT",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:12.0,cat:"地瓜球",supplier:"(地瓜球）GRAND MELTIQUE FOOD TRADIN",par:0,yield:100,batches:[]},
+    {id:203,name:"6 LITER POLAR-R.CK.CT",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:33.0,cat:"冰淇淋",supplier:"(冰淇淋)CHONG BROTHERS",par:0,yield:100,batches:[]},
+    {id:204,name:"6 LITER (NZ) - R.CK.CT",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:0.0,cat:"冰淇淋",supplier:"(冰淇淋)CHONG BROTHERS",par:0,yield:100,batches:[]},
+    {id:205,name:"CONE",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:36.0,cat:"冰淇淋",supplier:"(冰淇淋)CHONG BROTHERS",par:0,yield:100,batches:[]},
+    {id:206,name:"SCOOP",unit:"pcs",buyUnit:"pcs",conv:1,qty:0,cost:20.0,cat:"冰淇淋",supplier:"(冰淇淋)CHONG BROTHERS",par:0,yield:100,batches:[]},
+    {id:207,name:"STEAMBOAT SELECTION 6 IN 1",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:8.4,cat:"关东煮",supplier:"(关东煮)X.K.L FROZEN FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:208,name:"FOCOK 40PCS",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:12.0,cat:"关东煮",supplier:"(关东煮)X.K.L FROZEN FOOD SUPPLY",par:0,yield:100,batches:[]},
+    {id:209,name:"NUTRIFRES ORANGE JUICE (1CTN X 4BTL X 3.8KG)",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:380.0,cat:"果汁",supplier:"(果汁）BEST MARKETING &DISTRIBUTIO",par:0,yield:100,batches:[]},
+    {id:210,name:"NUTRIFRESLYCHEE GENERAL FLAVOUR (1CTN X 4BTL X 3.8KG)",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:380.0,cat:"果汁",supplier:"(果汁）BEST MARKETING &DISTRIBUTIO",par:0,yield:100,batches:[]},
+    {id:211,name:"NUTRIFRES PEACH PREMIUM FLAVOUR (1CTN X 4BTL X 3.8KG)",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:450.0,cat:"果汁",supplier:"(果汁）BEST MARKETING &DISTRIBUTIO",par:0,yield:100,batches:[]},
+    {id:212,name:"COKE ZERO",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:121.59,cat:"可乐机饮料",supplier:"(可乐机饮料）SAN LIAN TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:213,name:"FANTA GRAPE",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:121.59,cat:"可乐机饮料",supplier:"(可乐机饮料）SAN LIAN TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:214,name:"SPRITE",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:121.59,cat:"可乐机饮料",supplier:"(可乐机饮料）SAN LIAN TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:215,name:"COKE LESS SUGAR",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:217.67,cat:"可乐机饮料",supplier:"(可乐机饮料）SAN LIAN TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:216,name:"FUZE TEA LEMON",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:217.7,cat:"可乐机饮料",supplier:"(可乐机饮料）SAN LIAN TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:217,name:"CO2 FILLED TANK",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:45.4,cat:"可乐机饮料",supplier:"(可乐机饮料）SAN LIAN TRADING SDN BHD",par:0,yield:100,batches:[]},
+    {id:218,name:"ROLL BAG 10 X 16",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:9.0,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:219,name:"ROLL BAG 12 X 18",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:9.0,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:220,name:"ROLL BAG 14 X 20",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:9.0,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:221,name:"MULTIPURPOSE 2L",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:18.0,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:222,name:"HOUSE WRAP",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:190.0,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:223,name:"G.BAG 74 X 90 (Y)",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:15.5,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:224,name:"SANITIZER 75%",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:59.9,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:225,name:"MICROFIBER TOWEL 60 X 180",unit:"pkt",buyUnit:"pkt",conv:1,qty:0,cost:25.0,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:226,name:"NEW SOFT TISSUE 2PLY",unit:"bdl",buyUnit:"bdl",conv:1,qty:0,cost:87.6,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:227,name:"POP UP TISSUE",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:60.0,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:228,name:"GARBAGE BAG 32 X 40",unit:"ctn",buyUnit:"ctn",conv:1,qty:0,cost:4.2,cat:"包装",supplier:"(包装) Packaging",par:0,yield:100,batches:[]},
+    {id:229,name:"洗碗水 Dishwash (10l)",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:1.0,cat:"洗洁精纸巾",supplier:"(洗洁精纸巾) Detergent & Tissue",par:0,yield:100,batches:[]},
+    {id:230,name:"HAND SOAP 10LIT",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:1.0,cat:"洗洁精纸巾",supplier:"(洗洁精纸巾) Detergent & Tissue",par:0,yield:100,batches:[]},
+    {id:231,name:"MULTIPURPOSE CLEANER 10LIT",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:1.0,cat:"洗洁精纸巾",supplier:"(洗洁精纸巾) Detergent & Tissue",par:0,yield:100,batches:[]},
+    {id:232,name:"MULTI FOLD DIPENSER",unit:"kg",buyUnit:"kg",conv:1,qty:0,cost:1.0,cat:"洗洁精纸巾",supplier:"(洗洁精纸巾) Detergent & Tissue",par:0,yield:100,batches:[]},
   ];
-  const subRecipes=[
-    {id:"s1",name:"卤汁 Master Stock",unit:"kg",yieldQty:10,ing:[{n:"绍兴酒 Shaoxing Wine",q:1},{n:"南乳 Beancurd Paste",q:0.5}],cost:0},
-  ];
+  const subRecipes=[];
   const recipes=[
-    {id:1,name:"招牌蒸鱼头 Steamed Fish Head",price:38,ing:[{n:"松鱼头 Fish Head",q:1},{n:"绍兴酒 Shaoxing Wine",q:0.05}]},
-    {id:2,name:"蒸啦啦 Steamed Clams",price:26,ing:[{n:"沙白 Clams",q:0.4},{n:"绍兴酒 Shaoxing Wine",q:0.03}]},
-    {id:3,name:"卤猪脚 Braised Trotter",price:22,ing:[{n:"猪脚 Pork Trotter",q:0.5},{n:"卤汁 Master Stock",q:0.2,sub:true}]},
-    {id:4,name:"南乳炸鸡 Fried Chicken",price:18,ing:[{n:"鸡腿肉 Chicken Leg",q:0.3},{n:"南乳 Beancurd Paste",q:0.05}]},
-    {id:5,name:"招牌豆腐 Signature Tofu",price:14,ing:[{n:"豆腐 Tofu",q:3}]},
-    {id:6,name:"冬菜蒸猪肉 Steamed Pork",price:16,ing:[{n:"冬菜 Preserved Veg",q:0.3}]},
+    {id:1,name:"B1 纯爱自助吧 JUST LOVE BUFFET",price:0,ing:[]},
+    {id:2,name:"B2 炸纽约客牛肉块 FRIED CHUNK STEAK",price:0,ing:[]},
+    {id:3,name:"B3 纽约客牛扒 STRIPLOIN STEAK",price:0,ing:[]},
+    {id:4,name:"B4 莎朗牛扒 SIRLOIN STEAK",price:0,ing:[]},
+    {id:5,name:"B5 骰子菲力牛扒 FILLET CUBE DICE",price:0,ing:[]},
+    {id:6,name:"B6 菲力牛扒 FILLET MIGNON STEAK",price:0,ing:[]},
+    {id:7,name:"B7 经典炸鸡排 FRIED CHICKEN CUTLET",price:0,ing:[]},
+    {id:8,name:"B8 香煎鸡腿扒 GRILLED CHICKEN CHOP",price:0,ing:[]},
+    {id:9,name:"B9 嫩肩羊扒 TENDER LAMB",price:0,ing:[]},
+    {id:10,name:"B10 酥炸鱼排 FRIED FISH CHOP",price:0,ing:[]},
+    {id:11,name:"B11 火烤鱿鱼排 GRILL SQUID BODY",price:0,ing:[]},
+    {id:12,name:"B12 酥炸综合海鲜 MIX FRIED SEAFOOD",price:0,ing:[]},
+    {id:13,name:"B13 香煎鲑鱼排 GRILL SALMON",price:0,ing:[]},
+    {id:14,name:"C1 日式天妇罗炸虾 FRIED SHRIMP",price:0,ing:[]},
+    {id:15,name:"C2 香酥炸鱼块 FRIED FISH NUGGET",price:0,ing:[]},
+    {id:16,name:"C3 酥炸鱿鱼花 FRIED SQUID",price:0,ing:[]},
+    {id:17,name:"D1 招牌熊熊奶茶 BEAR MILK TEA",price:0,ing:[]},
+    {id:18,name:"D2 特调红茶 BLACK TEA",price:0,ing:[]},
+    {id:19,name:"D3 特调奶茶 MILK TEA",price:0,ing:[]},
+    {id:20,name:"D4 经典珍珠奶茶 BUBBLE TEA",price:0,ing:[]},
+    {id:21,name:"其他 Others",price:0,ing:[]},
   ];
-  const moves=[
-    {date:"2026-08-26",type:"in",item:"松鱼头 Fish Head",qty:7,unit:"pcs",amt:126,note:"泰记海鲜"},
-    {date:"2026-08-26",type:"waste",item:"豆腐 Tofu",qty:2,unit:"pcs",amt:2.40,note:"打翻/损坏"},
-    {date:"2026-08-25",type:"in",item:"沙白 Clams",qty:10,unit:"kg",amt:140,note:"泰记海鲜"},
-    {date:"2026-08-25",type:"ent",item:"南乳炸鸡 Fried Chicken",qty:2,unit:"份",amt:10.80,note:"熟客招待"},
-    {date:"2026-08-24",type:"transfer",item:"豆腐 Tofu",qty:20,unit:"pcs",amt:24,note:"→分店 C"},
-    {date:"2026-08-23",type:"waste",item:"沙白 Clams",qty:1,unit:"kg",amt:14,note:"过期变质"},
+  const moves=[];
+  const vendors=[
+    {id:1,name:"(中央)TCY OKR SB",terms:30},
+    {id:2,name:"(菜)JJX MART",terms:30},
+    {id:3,name:"(牛肉)OCEAN J FROZEN",terms:30},
+    {id:4,name:"(鸡)H&M TOP FOOD TRADING",terms:30},
+    {id:5,name:"(鸡肉)GENERATION SEVEN ENTERPRISE",terms:30},
+    {id:6,name:"(杂货)SMB FROZEN FOOD SDN BHD",terms:30},
+    {id:7,name:"(自助吧台）STANDARD FOOD SOLUTIONS",terms:30},
+    {id:8,name:"(物料）HNJ FOOD SUPPLY",terms:30},
+    {id:9,name:"(双龙)DRAGON TASTE SEAFOOD",terms:30},
+    {id:10,name:"（和丰）VO FON TRADING SDN BHD",terms:30},
+    {id:11,name:"(广味香)SLL SEASONING",terms:30},
+    {id:12,name:"(披萨）BAB FOODS INDUSTRY (M) SDN ",terms:30},
+    {id:13,name:"（面包）FUJI BAEKRY SUPPLIES",terms:30},
+    {id:14,name:"(地瓜球）GRAND MELTIQUE FOOD TRADIN",terms:30},
+    {id:15,name:"(冰淇淋)CHONG BROTHERS",terms:30},
+    {id:16,name:"(关东煮)X.K.L FROZEN FOOD SUPPLY",terms:30},
+    {id:17,name:"(果汁）BEST MARKETING &DISTRIBUTIO",terms:30},
+    {id:18,name:"(可乐机饮料）SAN LIAN TRADING SDN BHD",terms:30},
+    {id:19,name:"(包装) Packaging",terms:30},
+    {id:20,name:"(洗洁精纸巾) Detergent & Tissue",terms:30},
   ];
-  const vendors=[]; // 供应商由用户自行添加/导入（不预置示范供应商）
-  const payables=[
-    {id:1,vendor:"泰记海鲜 Thye Kee Seafood",po:"PO-2408-012",amt:266,date:"2026-08-25",due:"2026-09-24",status:"未付"},
-    {id:2,vendor:"合发肉商 Hup Huat Meat",po:"PO-2408-009",amt:475,date:"2026-08-20",due:"2026-09-03",status:"部分付",paid:200},
-    {id:3,vendor:"永兴杂货 Weng Heng Sundry",po:"PO-2408-015",amt:128,date:"2026-08-22",due:"2026-08-29",status:"未付"},
-  ];
-  const stocktakes = items.map(i=>({item:i.name,theory:i.qty,count:i.qty - (Math.random()<0.4?+(Math.random()*2).toFixed(1):0)}));
+  const payables=[];
+  const stocktakes = [];
   const opex={rent:4000,commission:2500,salaries:18500,epf:2405,socso:370,levy:640,ot:1200,electricity:2800,water:420,gas:980,wifi:180,rubbish:150,possaas:220,accounting:400,repair:350};
   const fin={posGross:78500}; // 旧字段，保留兼容；实际营业额改由 sales 计算
   /* ========== 销售数据层（★ 未来 POS 接口位置 ★）==========
      现在：手动/模拟填每道菜的当月销量。
      未来：把这个 sales 数组换成 FirePOS/EPOS360 API 推送的销售明细即可，
            下方 COGS 与营业额会自动重算，其他逻辑完全不用改。 */
-  const sales=[
-    {recipeId:1,qty:210}, {recipeId:2,qty:180}, {recipeId:3,qty:240},
-    {recipeId:4,qty:520}, {recipeId:5,qty:610}, {recipeId:6,qty:330},
-  ];
-  const audit=[
-    {date:"2026-08-26 18:22",user:"店长 Ah Lim",act:"进货入库",detail:"松鱼头 +7 pcs",old:"0",new:"7"},
-    {date:"2026-08-26 14:05",user:"员工 Siti",act:"报废登记",detail:"豆腐 打翻 -2 pcs",old:"52",new:"50"},
-    {date:"2026-08-25 21:40",user:"老板",act:"修改成本",detail:"沙白 单价 13.5→14.0",old:"13.50",new:"14.00"},
-  ];
+  const sales=[];
+  const audit=[];
   const staff=[
     {id:1,name:"陈志强 Tan CK",role:"店长 Manager",basic:3200,allowance:300,ot:150,epf:416,socso:35.75,eis:14.30,levy:0,local:true,ic:"880512-14-5527",phone:"012-3456789",joined:"2021-03-01",annualLeave:16,usedLeave:6},
     {id:2,name:"林美华 Lim MH",role:"收银 Cashier",basic:2200,allowance:150,ot:80,epf:286,socso:24.75,eis:9.90,levy:0,local:true,ic:"950820-10-6142",phone:"016-7788990",joined:"2023-06-15",annualLeave:12,usedLeave:3},
@@ -549,51 +795,22 @@ function seed(outletId){
     {id:3,empId:6,type:"年假 Annual",from:"2026-09-10",to:"2026-09-12",days:3,reason:"旅行",status:"待批准"},
   ];
   /* ===== 采购进货明细（按供应商）===== */
-  const purchases=[
-    {supplier:"泰记海鲜 Thye Kee Seafood",date:"2026-08-26",invoice:"INV-2408-001",code:"FSH-01",item:"松鱼头 Fish Head",qty:7,weight:12.5,price:126,note:"新鲜到货"},
-    {supplier:"泰记海鲜 Thye Kee Seafood",date:"2026-08-26",invoice:"INV-2408-001",code:"CLM-01",item:"沙白 Clams",qty:10,weight:10,price:140,note:""},
-    {supplier:"泰记海鲜 Thye Kee Seafood",date:"2026-08-12",invoice:"INV-2408-088",code:"FSH-01",item:"松鱼头 Fish Head",qty:5,weight:9.0,price:90,note:""},
-    {supplier:"合发肉商 Hup Huat Meat",date:"2026-08-25",invoice:"INV-2408-010",code:"CHK-01",item:"鸡腿肉 Chicken Leg",qty:2,weight:20,price:190,note:"2箱"},
-    {supplier:"合发肉商 Hup Huat Meat",date:"2026-08-20",invoice:"INV-2408-011",code:"PRK-01",item:"猪脚 Pork Trotter",qty:16,weight:16,price:192,note:""},
-    {supplier:"永兴杂货 Weng Heng Sundry",date:"2026-08-22",invoice:"INV-2408-020",code:"TOF-01",item:"豆腐 Tofu",qty:50,weight:0,price:60,note:""},
-    {supplier:"永兴杂货 Weng Heng Sundry",date:"2026-08-22",invoice:"INV-2408-020",code:"VEG-01",item:"冬菜 Preserved Veg",qty:14,weight:0,price:49,note:""},
-  ];
+  const purchases=[];
   /* ===== 验收 / 退货折让（按供应商，含处理方式）===== */
-  const grn=[
-    {supplier:"泰记海鲜 Thye Kee Seafood",date:"2026-08-23",invoice:"GRN-2408-001",code:"CLM-01",item:"沙白 Clams",qty:1,weight:1,price:14,settle:"不收费",note:"过期变质"},
-    {supplier:"合发肉商 Hup Huat Meat",date:"2026-08-20",invoice:"GRN-2408-005",code:"CHK-01",item:"鸡腿肉 Chicken Leg",qty:1,weight:10,price:95,settle:"补货",note:"数量不足"},
-    {supplier:"永兴杂货 Weng Heng Sundry",date:"2026-08-18",invoice:"GRN-2408-007",code:"TOF-01",item:"豆腐 Tofu",qty:5,weight:0,price:6,settle:"取消订单",note:"错货"},
-  ];
+  const grn=[];
   /* ===== 跨店调拨（物品 + 人力）===== */
-  const transfers=[
-    {date:"2026-08-24",item:"豆腐 Tofu",code:"TOF-01",qty:20,unit:"pcs",amt:24,to:"分店 2",mode:"transfer",note:"急用调货"},
-    {date:"2026-08-22",item:"绍兴酒 Shaoxing Wine",code:"WIN-01",qty:3,unit:"btl",amt:45,to:"分店 3",mode:"return",note:"借用后归还"},
-  ];
-  const staffLoans=[
-    {date:"2026-08-25",staff:"阿都拉 Abdullah",role:"厨师 Cook",to:"分店 2",mode:"loan",note:"人手不足支援"},
-    {date:"2026-08-19",staff:"黄丽婷 Wong LT",role:"服务员 Server",to:"分店 3",mode:"return",note:"支援结束返回"},
-  ];
+  const transfers=[];
+  const staffLoans=[];
   /* ===== 报废损耗 ===== */
-  const wasteLog=[
-    {date:"2026-08-26",item:"豆腐 Tofu",code:"TOF-01",cost:1.20,qty:2,reason:"打翻/损坏",note:""},
-    {date:"2026-08-23",item:"沙白 Clams",code:"CLM-01",cost:14.00,qty:1,reason:"过期变质",note:""},
-    {date:"2026-08-15",item:"鸡腿肉 Chicken Leg",code:"CHK-01",cost:9.50,qty:1.5,reason:"变色发臭",note:"冰箱故障"},
-  ];
+  const wasteLog=[];
   /* ===== 招待 / 赠送 ===== */
-  const offers=[
-    {date:"2026-08-25",type:"ENT",item:"南乳炸鸡 Fried Chicken",person:"店长 Ah Lim",qty:2,total:10.80,note:"熟客招待"},
-    {date:"2026-08-21",type:"Offer",item:"招牌豆腐 Signature Tofu",person:"老板",qty:1,total:14.00,note:"促销赠送"},
-  ];
+  const offers=[];
   /* ===== 月末算货（按供应商结算）===== */
-  const monthEnd=[
-    {supplier:"泰记海鲜 Thye Kee Seafood",date:"2026-07-31",invoice:"ME-2407-01",code:"FSH-01",item:"松鱼头 Fish Head",qty:3,weight:5,price:54,note:"7月月末结存"},
-    {supplier:"合发肉商 Hup Huat Meat",date:"2026-07-31",invoice:"ME-2407-05",code:"PRK-01",item:"猪脚 Pork Trotter",qty:8,weight:8,price:96,note:"7月月末结存"},
-    {supplier:"合发肉商 Hup Huat Meat",date:"2026-08-31",invoice:"ME-2408-05",code:"CHK-01",item:"鸡腿肉 Chicken Leg",qty:12,weight:12,price:114,note:"8月月末结存"},
-  ];
+  const monthEnd=[];
   const dishCosts=[]; // 可编辑菜品成本表（用户导入/自建）
   const monthlySales={}; // 按月销量：{ "2026-09": [{dishId, qty}] }（POS/手动）
   const monthClose={};   // 月度锁定档案：{ "2026-09": {locked,date,avgPrices,dishCost} }
-  return {items,recipes,subRecipes,moves,vendors,payables,stocktakes,opex,staff,attendance,schedule,leaves,sales,fin,audit,purchases,grn,transfers,staffLoans,wasteLog,offers,monthEnd,dishCosts,monthlySales,monthClose,opexByMonth:{}};
+  return {_sv:SEED_VERSION,items,recipes,subRecipes,moves,vendors,payables,stocktakes,opex,staff,attendance,schedule,leaves,sales,fin,audit,purchases,grn,transfers,staffLoans,wasteLog,offers,monthEnd,dishCosts,monthlySales,monthClose,opexByMonth:{}};
 }
 
 /* ================= 数据持久化：Supabase 云端 ⇄ 本地存储 自动切换 =================
@@ -652,8 +869,10 @@ const Store={
 let DB={};
 async function loadDB(){
   for(const o of OUTLETS){
-    try{const r=await Store.get('erpv2:'+o.id);DB[o.id]=r?JSON.parse(r.value):seed(o.id);}
-    catch(e){DB[o.id]=seed(o.id);}
+    let data=null;
+    try{const r=await Store.get('erpv2:'+o.id);data=r?JSON.parse(r.value):null;}catch(e){data=null;}
+    if(!data || data._sv!==SEED_VERSION){ data=seed(o.id); DB[o.id]=data; try{await save(o.id);}catch(e){} }
+    else DB[o.id]=data;
   }
 }
 async function save(oid){try{await Store.set('erpv2:'+(oid||curOutlet),JSON.stringify(DB[oid||curOutlet]));}catch(e){}}
@@ -1543,7 +1762,7 @@ function pgSales(){
   <div class="grid g3">
     <div class="kpi"><div class="k">${LANG==="zh"?"含税营业额":"Gross Sales"}</div><div class="v sm">${money(totRev)}</div></div>
     <div class="kpi"><div class="k">${LANG==="zh"?"食材成本 COGS":"COGS"}</div><div class="v sm up">${money(totCogs)}</div></div>
-    <div class="kpi"><div class="k">${LANG==="zh"?"食材成本率":"Food%"}</div><div class="v sm ${(totCogs/(totRev/1.06)*100)>40?'up':'down'}">${(totCogs/(totRev/1.06)*100).toFixed(1)}%</div></div>
+    <div class="kpi"><div class="k">${LANG==="zh"?"食材成本率":"Food%"}</div><div class="v sm ${(totRev>0&&(totCogs/(totRev/1.06)*100)>40)?'up':'down'}">${totRev>0?(totCogs/(totRev/1.06)*100).toFixed(1):'0.0'}%</div></div>
   </div>
   <div class="card tbl" style="margin-top:10px;"><table><thead><tr><th>${LANG==="zh"?"菜品":"Dish"}</th><th>${LANG==="zh"?"售价":"Price"}</th><th>${LANG==="zh"?"单成本":"Cost"}</th><th>${LANG==="zh"?"销量":"Qty"}</th><th>${LANG==="zh"?"营业额":"Revenue"}</th><th>${LANG==="zh"?"成本":"COGS"}</th><th>${LANG==="zh"?"毛利":"GP"}</th></tr></thead><tbody>
   ${rows.map(r=>`<tr><td><b>${r.name}</b></td><td>${money(r.price)}</td><td class="mini">${money(r.cost)}</td><td><b>${r.qty}</b></td><td>${money(r.rev)}</td><td class="up">${money(r.cogs)}</td><td class="down">${money(r.gp)}</td></tr>`).join('')}
