@@ -451,7 +451,7 @@ function hrScope(){return ROLES[curRole].hrScope;} // all/branch/self
 function canApproveLeave(){return ROLES[curRole].approveLeave;}
 // 模拟「当前登录的员工」是谁（用于 self 范围）——示范用第一位
 function currentEmpId(){return 1;}
-const TODAY="2026-08-27";
+const TODAY=new Date().toLocaleDateString('en-CA');  // 真实当天日期（YYYY-MM-DD），供到期提醒/月度/考勤使用
 let curOutlet="b1", curRole="owner", LANG="zh", moveFilter="all", curPage="dash";
 let curUser=null;   // 真实登录用户 {email,name,role,outlet}；演示模式为 null
 let USERS=[];       // 白名单/用户目录缓存（erp_users）
@@ -1287,7 +1287,7 @@ function pgInv(){
         </div></div>`;
     }).join('')||`<div class="empty">${zh?"暂无品项，先在采购或此页导入。":"No items"}</div>`;
     return `<div class="fb"><h2 class="h" style="margin:0;">📦 ${zh?"库存清单":"Inventory"} <span class="tag">${nm(outletObj())}</span></h2>${addBtns}</div>
-      <div class="hint">${zh?"按供应商分组。点选供应商查看其全部品项库存。全链联动：进货入库、报废/调拨/销售自动扣减。":"Grouped by supplier. Tap one to view its stock."}</div>
+      <div class="hint">${zh?"👉 功能：看每样食材还剩多少、值多少钱(按供应商分组)。进货会自动加、卖出/报废/调拨会自动减，剩太少会提醒你订货。":"See how much of each item is left & its value; auto-adjusts on purchase/sale/waste."}</div>
       ${cards}`;
   }
   // —— 单一供应商库存视图 ——
@@ -1334,12 +1334,28 @@ function setMF(f){moveFilter=f;render();}
 /* ================= 应付账款 M2 ================= */
 function pgAp(){
   const x=d();
-  return `<div class="fb"><h2 class="h" style="margin:0;">💳 ${LANG==="zh"?"应付账款 Accounts Payable":"Payables"}</h2><button class="btn ghost sm" onclick="nav('proc')">← ${LANG==="zh"?"返回":"Back"}</button></div>
-  <div class="hint">${LANG==="zh"?"记录供应商账期与付款状态，红色代表即将或已逾期。":"Vendor credit terms & payment status."}</div>
-  <div class="card tbl"><table><thead><tr><th>${LANG==="zh"?"供应商":"Vendor"}</th><th>PO</th><th>${LANG==="zh"?"金额":"Amt"}</th><th>${LANG==="zh"?"已付":"Paid"}</th><th>${LANG==="zh"?"到期":"Due"}</th><th>${LANG==="zh"?"状态":"Status"}</th>${can('proc')?'<th></th>':''}</tr></thead><tbody>
-  ${x.payables.map(p=>{const left=days(p.due,TODAY);const overdue=left<=0;const cls=p.status==="已付"?"p-g":overdue?"p-r":left<=5?"p-a":"p-n";
-    return `<tr><td><b>${p.vendor}</b></td><td class="mini">${p.po}</td><td>${money(p.amt)}</td><td>${money(p.paid||0)}</td><td>${p.due}<br><span class="mini ${overdue&&p.status!=='已付'?'neg':''}">${p.status==="已付"?"":(overdue?(LANG==="zh"?"已逾期":"Overdue"):left+(LANG==="zh"?"天":"d"))}</span></td><td><span class="pill ${cls}">${p.status}</span></td>${canW('proc')?`<td style="white-space:nowrap;">${p.status!=='已付'?`<button class="btn sm brand" onclick="payAP(${p.id})">${LANG==="zh"?"付款":"Pay"}</button> `:''}<button class="ib" onclick="delPayable(${p.id})">🗑️</button></td>`:''}</tr>`;
-  }).join('')}
+  const zh=LANG==="zh";
+  const rawLeft=p=>Math.round((new Date(p.due)-new Date(TODAY))/86400000);
+  const remind=p=>{ if(p.status==="已付")return `<span class="pill p-g">${zh?"已付":"Paid"}</span>`;
+    const L=rawLeft(p);
+    if(L<0)return `<span class="pill p-r">${zh?"逾期 "+(-L)+" 天":"Overdue "+(-L)+"d"}</span>`;
+    if(L===0)return `<span class="pill p-r">${zh?"今天到期":"Due today"}</span>`;
+    if(L<=3)return `<span class="pill p-a">${zh?"还有 "+L+" 天":L+"d left"}</span>`;
+    if(L<=7)return `<span class="pill p-a">${zh?"还有 "+L+" 天":L+"d left"}</span>`;
+    return `<span class="pill p-n">${zh?"还有 "+L+" 天":L+"d left"}</span>`; };
+  const unpaid=x.payables.filter(p=>p.status!=="已付");
+  const totalDue=unpaid.reduce((s,p)=>s+(p.amt-(p.paid||0)),0);
+  const soon=unpaid.filter(p=>rawLeft(p)<=7).length;
+  return `<div class="fb"><h2 class="h" style="margin:0;">💳 ${zh?"应付账款":"Payables"}</h2><div style="display:flex;gap:6px;">${canW('proc')?`<button class="btn gold sm" onclick="openM('payable')">+ ${zh?"应付款":"Payable"}</button>`:''}<button class="btn ghost sm" onclick="nav('proc')">← ${zh?"返回":"Back"}</button></div></div>
+  <div class="hint">${zh?"功能：记录还没付给供应商的钱，系统帮你倒数还有几天要付。付款方式分 现金 / 每周结 / 每月结 / 自定账期。":"Track money owed to suppliers with due-date reminders."}</div>
+  <div class="grid g2" style="margin-bottom:10px;">
+    <div class="kpi"><div class="k">${zh?"未付总额":"Total Owed"}</div><div class="v sm ${totalDue>0?'neg':''}">${money(totalDue)}</div></div>
+    <div class="kpi"><div class="k">${zh?"7天内到期":"Due ≤7 days"}</div><div class="v sm ${soon?'neg':''}">${soon} ${zh?"笔":""}</div></div>
+  </div>
+  <div class="card tbl"><table><thead><tr><th>${zh?"供应商":"Vendor"}</th><th>${zh?"付款方式":"Mode"}</th><th>${zh?"金额":"Amt"}</th><th>${zh?"到期":"Due"}</th><th>${zh?"提醒":"Reminder"}</th>${canW('proc')?'<th></th>':''}</tr></thead><tbody>
+  ${x.payables.slice().sort((a,b)=>new Date(a.due)-new Date(b.due)).map(p=>{
+    return `<tr><td><b>${p.vendor}</b>${p.po&&p.po!=='-'?`<br><span class="mini">${p.po}</span>`:''}${p.note?`<br><span class="mini">${p.note}</span>`:''}</td><td><span class="pill p-n">${p.mode||(zh?"账期":"Term")}</span></td><td>${money(p.amt)}${p.paid?`<br><span class="mini">${zh?"已付":"paid"} ${money(p.paid)}</span>`:''}</td><td class="mini">${p.due}</td><td>${remind(p)}</td>${canW('proc')?`<td style="white-space:nowrap;">${p.status!=='已付'?`<button class="btn sm brand" onclick="payAP(${p.id})">${zh?"标记已付":"Pay"}</button> `:''}<button class="ib" onclick="delPayable(${p.id})">🗑️</button></td>`:''}</tr>`;
+  }).join('')||`<tr><td colspan="${canW('proc')?6:5}" class="empty">${zh?"暂无应付款，点『+ 应付款』添加":"No payables"}</td></tr>`}
   </tbody></table></div>
   <div class="fb" style="margin-top:16px;"><h2 class="h" style="margin:0;">🏢 ${LANG==="zh"?"供应商管理":"Vendors"}</h2>${canW('proc')?`<button class="btn gold sm" onclick="openM('vendor')">+ ${LANG==="zh"?"供应商":"Vendor"}</button>`:''}</div>
   <div class="card tbl"><table><thead><tr><th>${LANG==="zh"?"供应商":"Vendor"}</th><th>${LANG==="zh"?"账期":"Terms"}</th>${canW('proc')?`<th>${LANG==="zh"?"操作":"Action"}</th>`:''}</tr></thead><tbody>
@@ -1440,7 +1456,7 @@ function pgBom(){
     </tr>`;}).join('')||`<tr><td colspan="8" class="empty">${zh?"暂无菜品，点『导入菜品表』或『+ 菜品』":"No dishes"}</td></tr>`;
   return `
   <div class="fb"><h2 class="h" style="margin:0;">🍲 ${zh?"配方成本 · 菜品成本表":"Recipe Cost"} <span class="tag">${list.length}</span></h2></div>
-  <div class="hint">${zh?"点菜品 → 查看/编辑其材料明细(单独算)。成本率＝总成本÷售价，目标28-35%(青=偏低/绿=达标/红=偏高)。全部可增删改。":"Tap a dish to edit its ingredient costing. Fully editable."}</div>
+  <div class="hint">${zh?"👉 功能：设定每道菜的成本。可只填一个成本价，或列出食材让系统自动算(BOM)——用来看每道菜赚多少、成本率健不健康(绿=达标28-35%，红=偏高)。":"Set each dish's cost (single figure or full BOM) to see per-dish margin."}</div>
   ${w?`<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
     <button class="btn gold sm" onclick="formDish()">+ ${zh?"菜品":"Dish"}</button>
     <button class="btn ghost sm" onclick="importDishForm()">📥 ${zh?"导入菜品表":"Import Dishes"}</button>
@@ -1527,7 +1543,7 @@ function pgMonthly(){
     ${w&&!locked?`<td style="white-space:nowrap;"><button class="ib" onclick="formMonthSale('${m}',${i})">✏️</button> <button class="ib" onclick="delMonthSale('${m}',${i})">🗑️</button></td>`:''}</tr>`;}).join('')||`<tr><td colspan="8" class="empty">${zh?"本月暂无销量，点『录入销量』或由 POS 推送":"No sales this month"}</td></tr>`;
   return `<div class="fb"><h2 class="h" style="margin:0;">📅 ${zh?"月度核算":"Monthly Cost"} ${picker}</h2>
     ${locked?`<span class="pill p-b">🔒 ${zh?"已锁定":"Locked"}</span>`:''}</div>
-  <div class="hint">${zh?`按自然月独立联动：每月原料用<b>当月加权平均进价</b>算菜品成本，${monthLabel2(m)}的销售只用${monthLabel2(m)}的成本，绝不串月。锁定后归档固定。库存仍以月末算货兜底。`:"Natural-month costing."}</div>
+  <div class="hint">${zh?`👉 功能：每个月单独结一次账，看这个月到底<b>赚还是亏</b>。用当月进货均价 × 当月销量自动算，${monthLabel2(m)}只算${monthLabel2(m)}的，不会串到别的月；按「锁定」后该月数字归档固定。`:"Close each month's books: profit or loss, using that month's costs only."}</div>
   <div class="grid g4" style="margin-bottom:10px;">
     <div class="kpi"><div class="k">${zh?"月营收":"Revenue"}</div><div class="v sm pos">${money(pnl.rev)}</div><div class="s mini">${num(pnl.orders)} ${zh?"份":"sold"}</div></div>
     <div class="kpi"><div class="k">${zh?"食材成本 COGS":"COGS"}</div><div class="v sm neg">${money(pnl.cogs)}</div><div class="s mini" style="color:${cpCol(pnl.foodPct)}">${pnl.foodPct.toFixed(1)}%</div></div>
@@ -1782,6 +1798,7 @@ function pgReport(){
   return `
   <div class="fb"><h2 class="h" style="margin:0;">📈 ${LANG==="zh"?"报表中心":"Reports"}</h2>
     <button class="btn ghost sm" onclick="exportCSV()">⬇ CSV</button></div>
+  <div class="hint">${LANG==="zh"?"👉 功能：把库存总值、进货、损耗、盘点差异、月度盈亏等汇总成一页，一眼看清全店状况；可按「⬇ CSV」导出给会计或存档。":"One-page summary of stock, purchases, wastage & monthly P&L; export to CSV."}</div>
   <div class="grid g3">
     <div class="kpi"><div class="k">${LANG==="zh"?"库存总值":"Stock Value"}</div><div class="v sm">${money(totalVal)}</div></div>
     <div class="kpi"><div class="k">${LANG==="zh"?"食材成本率":"Food%"}</div><div class="v sm ${f.foodPct>40?'neg':'pos'}">${f.foodPct.toFixed(1)}%</div></div>
@@ -1817,7 +1834,7 @@ function pgSales(){
   const totCogs=rows.reduce((s,r)=>s+r.cogs,0);
   const totGp=totRev/1.06-totCogs;
   return `<div class="fb"><h2 class="h" style="margin:0;">🧾 ${LANG==="zh"?"销售数据":"Sales"} <span class="tag">${nm(outletObj())}</span></h2>${canW('sales')?`<button class="btn gold sm" onclick="openM('sales')">✎ ${LANG==="zh"?"录入销量":"Edit Sales"}</button>`:''}</div>
-  <div class="hint">📡 ${LANG==="zh"?"这是 POS 数据层。现在手动录入销量；未来接 FirePOS/EPOS360 后，这里自动更新。营业额和食材成本(COGS)都由「销量×菜价/配方」实时算出，直接联动净利。":"POS data layer. Revenue & COGS derive from sales×BOM, feeding Net Profit live."}</div>
+  <div class="hint">👉 ${LANG==="zh"?"功能：录入每道菜卖了几份，系统自动算营业额和毛利，直接连到利润大盘。以后接上 POS 机可自动同步。":"Enter qty sold per dish; revenue & profit auto-calculate into the dashboard."}</div>
   <div class="grid g3">
     <div class="kpi"><div class="k">${LANG==="zh"?"含税营业额":"Gross Sales"}</div><div class="v sm">${money(totRev)}</div></div>
     <div class="kpi"><div class="k">${LANG==="zh"?"食材成本 COGS":"COGS"}</div><div class="v sm up">${money(totCogs)}</div></div>
@@ -1931,7 +1948,7 @@ function pgCK(){
 function pgStock(){
   const x=d();
   return `<div class="fb"><h2 class="h" style="margin:0;">📋 ${LANG==="zh"?"实物盘点":"Stock Take"} <span class="tag">${nm(outletObj())}</span></h2>${canW('stock')?`<button class="btn gold sm" onclick="openM('stocktake')">+ ${LANG==="zh"?"盘点":"Count"}</button>`:''}</div>
-  <div class="hint">${LANG==="zh"?"录入实际数量，系统自动算盘差（理论−实盘）＝隐性损耗。":"Records actual count → variance."}</div>
+  <div class="hint">${LANG==="zh"?"👉 功能：月底(或定期)数一次实际库存填进来，系统自动算出账面 vs 实物差多少(＝隐性损耗/被偷被浪费)，也用来做月度实耗成本。":"Enter your physical count; system shows the shortfall vs book stock."}</div>
   <div class="card tbl"><table><thead><tr><th>${LANG==="zh"?"品项":"Item"}</th><th>${LANG==="zh"?"理论":"Theory"}</th><th>${LANG==="zh"?"实盘":"Actual"}</th><th>${LANG==="zh"?"盘差":"Var"}</th><th>${LANG==="zh"?"盘差额":"Val"}</th></tr></thead><tbody>
   ${x.stocktakes.map(s=>{const it=findItem(s.item);const v=s.theory-s.count;return `<tr><td>${s.item}</td><td>${num(s.theory)}</td><td>${num(s.count)}</td><td><span class="pill ${Math.abs(v)>0.4?'p-r':'p-g'}">${v>0?'+':''}${num(v)}</span></td><td class="${Math.abs(v)>0.4?'neg':''}">${money(Math.abs(v)*(it?it.cost:0))}</td></tr>`;}).join('')}
   </tbody></table></div>`;
@@ -2204,6 +2221,17 @@ function openM(type,editId){
       <div class="fr"><label>${LANG==="zh"?"供应商名称":"Vendor Name"}</label><input id="v_name" placeholder="泰记海鲜 Thye Kee"></div>
       <div class="fr"><label>${LANG==="zh"?"账期(天)":"Credit Terms (days)"}</label><input id="v_terms" type="number" value="30"></div>
       <button class="btn block brand" onclick="saveVendor()">${LANG==="zh"?"保存":"Save"}</button>`,
+    payable:`<h3>+ ${LANG==="zh"?"应付款":"Payable"} <span class="x" onclick="closeM()">×</span></h3>
+      <div class="fr"><label>${LANG==="zh"?"供应商":"Vendor"}</label><select id="ap_vendor">${(d().vendors||[]).map(v=>`<option value="${v.name}">${v.name}</option>`).join('')||`<option value="">${LANG==="zh"?"（先到供应商管理添加）":"(add vendor first)"}</option>`}</select></div>
+      <div class="fr"><label>${LANG==="zh"?"金额 RM":"Amount RM"}</label><input id="ap_amt" type="number" step="0.01" placeholder="0.00"></div>
+      <div class="fr"><label>${LANG==="zh"?"付款方式":"Payment Mode"}</label><select id="ap_mode">
+        <option value="现金">${LANG==="zh"?"现金（今天付）":"Cash (today)"}</option>
+        <option value="每周">${LANG==="zh"?"每周结（7天后）":"Weekly (+7d)"}</option>
+        <option value="每月" selected>${LANG==="zh"?"每月结（30天后）":"Monthly (+30d)"}</option>
+        <option value="账期">${LANG==="zh"?"自定账期（填天数）":"Custom days"}</option></select></div>
+      <div class="fr"><label>${LANG==="zh"?"自定天数（仅『自定账期』用）":"Custom days"}</label><input id="ap_days" type="number" value="14"></div>
+      <div class="fr"><label>${LANG==="zh"?"单号 / 备注（可留空）":"Invoice / Note"}</label><input id="ap_note" placeholder="${LANG==="zh"?"发票号或备注":"optional"}"></div>
+      <button class="btn block brand" onclick="savePayable()">${LANG==="zh"?"保存":"Save"}</button>`,
     emp:`<h3>+ ${LANG==="zh"?"新增员工":"New Employee"} <span class="x" onclick="closeM()">×</span></h3>
       <div class="fr"><label>${LANG==="zh"?"姓名":"Name"}</label><input id="em_name" placeholder="陈志强 Tan CK"></div>
       <div class="fg2"><div class="fr"><label>${LANG==="zh"?"职位":"Role"}</label><input id="em_role" placeholder="厨师 Cook"></div>
@@ -2335,6 +2363,20 @@ async function saveVendor(){
   const terms=+document.getElementById('v_terms').value||0;
   if(_editId){const v=d().vendors.find(x=>x.id===_editId);if(v){v.name=n;v.terms=terms;auditLog("编辑供应商",n,"","");}}
   else{d().vendors.push({id:Date.now(),name:n,terms});auditLog("新增供应商",n,"","");}
+  await save();closeM();render();
+}
+async function savePayable(){
+  const vendor=document.getElementById('ap_vendor').value||'';
+  const amt=+document.getElementById('ap_amt').value||0;
+  const mode=document.getElementById('ap_mode').value||'每月';
+  const days=+document.getElementById('ap_days').value||0;
+  const note=document.getElementById('ap_note').value.trim();
+  if(!vendor)return alert(LANG==="zh"?"请选择供应商":"Select vendor");
+  if(!amt)return alert(LANG==="zh"?"请输入金额":"Amount required");
+  const add=mode==='现金'?0:mode==='每周'?7:mode==='每月'?30:days;
+  const due=new Date();due.setDate(due.getDate()+add);
+  d().payables.unshift({id:Date.now(),vendor,po:'-',note,amt,paid:0,date:TODAY,due:due.toISOString().slice(0,10),mode,status:"未付"});
+  auditLog("新增应付款",vendor+" "+money(amt)+" ("+mode+")","","");
   await save();closeM();render();
 }
 async function saveRecipe(){
