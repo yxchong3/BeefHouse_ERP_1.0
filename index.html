@@ -796,7 +796,7 @@ function seed(outletId){
   ];
   /* ===== 采购进货明细（按供应商）===== */
   const purchases=[];
-  /* ===== 验收 / 退货折让（按供应商，含处理方式）===== */
+  /* ===== 验收 / 退货/补货（按供应商，含处理方式）===== */
   const grn=[];
   /* ===== 跨店调拨（物品 + 人力）===== */
   const transfers=[];
@@ -1307,7 +1307,7 @@ function pgProc(){
   const cards=[];
   if(can('proc')){
     cards.push(["purchase","📥",LANG==="zh"?"采购进货":"Purchases",LANG==="zh"?"按供应商 · 每年月日进货单":"By supplier · dated invoices",var_green()]);
-    cards.push(["grn","📋",LANG==="zh"?"验收 / 退货折让":"GRN / Returns",LANG==="zh"?"按供应商 · 含补货/免费/取消":"By supplier · settlement",var_blue()]);
+    cards.push(["grn","📋",LANG==="zh"?"验收 / 退货/补货":"GRN / Returns",LANG==="zh"?"按供应商 · 含补货/免费/取消":"By supplier · settlement",var_blue()]);
   }
   if(can('transfer'))cards.push(["transfer","🔁",LANG==="zh"?"跨店调拨":"Transfer",LANG==="zh"?"物品调拨 + 人力借调":"Items + staff loans",var_navy()]);
   if(can('waste'))cards.push(["waste2","🗑",LANG==="zh"?"报废损耗":"Wastage",LANG==="zh"?"成本×数量 · 原因备注":"Cost × qty · reason",var_red()]);
@@ -2156,7 +2156,7 @@ function openM(type,editId){
       <div class="fr"><label>${LANG==="zh"?"日期":"Date"}</label><input id="p_date" type="date" value="${TODAY}"></div></div>
       <div class="hint">${LANG==="zh"?"保存后：库存增加、加权平均更新单价、生成应付账款(按供应商账期)。":"Updates stock, weighted cost, creates payable."}</div>
       <button class="btn block" style="background:var(--green)" onclick="savePO()">${LANG==="zh"?"保存进货":"Save"}</button>`,
-    grn:`<h3>📋 ${LANG==="zh"?"验收 / 退货折让 GRN":"GRN / Credit Note"} <span class="x" onclick="closeM()">×</span></h3>
+    grn:`<h3>📋 ${LANG==="zh"?"验收 / 退货/补货 GRN":"GRN / Credit Note"} <span class="x" onclick="closeM()">×</span></h3>
       <div class="hint">${LANG==="zh"?"实收少货或破损时登记，自动修正入库量并调整应付账款。":"Short/damaged receipt adjusts stock & payable."}</div>
       <div class="fr"><label>${LANG==="zh"?"品项":"Item"}</label><select id="g_item">${itemOpts()}</select></div>
       <div class="fg2"><div class="fr"><label>${LANG==="zh"?"少收/破损数量":"Shortage Qty"}</label><input id="g_qty" type="number"></div>
@@ -2305,7 +2305,7 @@ async function saveGRN(){
   d().moves.unshift({date:TODAY,type:'grn',item:name,qty,unit:it?it.unit:'',amt:-amt,note:reason+" 折让"});
   // 冲减最近一笔应付
   const p=d().payables.find(p=>p.status!=="已付");if(p)p.amt=Math.max(0,p.amt-amt);
-  auditLog("退货折让",`${name} -${qty} (${reason})`,"",money(amt));
+  auditLog("退货/补货",`${name} -${qty} (${reason})`,"",money(amt));
   await save();closeM();render();
 }
 async function saveTransfer(){
@@ -2534,6 +2534,12 @@ function settleTxt(s){const m={"补货":"Restock","不收费":"No Charge","取�
 function modePill(m){return m==="transfer"?"p-b":m==="return"?"p-a":m==="loan"?"p-p":"p-n";}
 function modeTxt(m){const z={transfer:"直接调拨",return:"借用归还",loan:"借出支援"},e={transfer:"Transfer",return:"Return",loan:"Loan Out"};return LANG==="zh"?(z[m]||m):(e[m]||m);}
 function itemSelOpts(sel){return (d().items||[]).map(i=>`<option value="${i.name}" ${i.name===sel?'selected':''}>${i.name}</option>`).join('');}
+/* 报废损耗可选：库存食材 + 菜单成品(B1–D4)，可自行输入新名 */
+function wasteItemOpts(){
+  const dishes=(d().recipes||[]).map(r=>r.name);
+  const items=(d().items||[]).map(i=>i.name);
+  return [...dishes,...items].map(n=>`<option value="${n}"></option>`).join('');
+}
 function supplierSelOpts(sel){return supplierList().map(v=>`<option value="${v.name}" ${v.name===sel?'selected':''}>${v.name}</option>`).join('');}
 function outletNames(){return OUTLETS.filter(o=>!o.ck&&o.id!==curOutlet).map(o=>nm(o));}
 
@@ -2548,7 +2554,7 @@ function itemSummary(recs){
 /* ================= 供应商钻取账册（采购 / 验收退货 / 月末算货 共用）================= */
 function ledgerCfg(mod){return ({
   purchase:{arr:'purchases',icon:"📥",title:LANG==="zh"?"采购进货":"Purchases",hasSettle:false,byMonth:false,form:'formLedger'},
-  grn:{arr:'grn',icon:"📋",title:LANG==="zh"?"验收 / 退货折让":"GRN / Returns",hasSettle:true,byMonth:false,form:'formLedger'},
+  grn:{arr:'grn',icon:"📋",title:LANG==="zh"?"验收 / 退货/补货":"GRN / Returns",hasSettle:true,byMonth:false,form:'formLedger'},
   monthend:{arr:'monthEnd',icon:"🧮",title:LANG==="zh"?"月末算货":"Month-End Count",hasSettle:false,byMonth:true,form:'formLedger'},
 })[mod];}
 
@@ -2730,7 +2736,7 @@ function formWaste2(editIdx){
   const reasonOpts=reasons.map(x=>`<option ${r&&r.reason===x?'selected':''}>${x}</option>`).join('');
   openForm(`<h3>🗑 ${isEdit?(LANG==="zh"?"编辑报废":"Edit Wastage"):(LANG==="zh"?"新增报废":"New Wastage")} <span class="x" onclick="closeM()">×</span></h3>
     <div class="fg2"><div class="fr"><label>${LANG==="zh"?"日期":"Date"}</label><input id="w_date" type="date" value="${r?r.date:TODAY}"></div>
-      <div class="fr"><label>${LANG==="zh"?"物品名称":"Item"}</label><select id="w_item" onchange="wItemAuto()">${itemSelOpts(r?r.item:'')}</select></div></div>
+      <div class="fr"><label>${LANG==="zh"?"物品名称 / 菜品(可输入)":"Item / Dish"}</label><input id="w_item" list="wItemList" onchange="wItemAuto()" value="${r?(r.item||''):''}" placeholder="${LANG==="zh"?"选或直接输入":"pick or type"}"><datalist id="wItemList">${wasteItemOpts()}</datalist></div></div>
     <div class="fg3"><div class="fr"><label>Code</label><input id="w_code" value="${r?(r.code||''):''}"></div>
       <div class="fr"><label>${LANG==="zh"?"成本价RM":"Cost"}</label><input id="w_cost" type="number" step="0.01" value="${r?r.cost:''}"></div>
       <div class="fr"><label>${LANG==="zh"?"数量":"Qty"}</label><input id="w_qty" type="number" step="0.01" value="${r?r.qty:''}"></div></div>
