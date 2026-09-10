@@ -810,7 +810,7 @@ function seed(outletId){
   const dishCosts=[]; // 可编辑菜品成本表（用户导入/自建）
   const monthlySales={}; // 按月销量：{ "2026-09": [{dishId, qty}] }（POS/手动）
   const monthClose={};   // 月度锁定档案：{ "2026-09": {locked,date,avgPrices,dishCost} }
-  return {_sv:SEED_VERSION,items,recipes,subRecipes,moves,vendors,payables,stocktakes,opex,staff,attendance,schedule,leaves,sales,fin,audit,purchases,grn,transfers,staffLoans,wasteLog,offers,monthEnd,dishCosts,monthlySales,monthClose,opexByMonth:{}};
+  return {_sv:SEED_VERSION,items,recipes,subRecipes,moves,vendors,payables,stocktakes,opex,staff,attendance,schedule,leaves,sales,fin,audit,purchases,grn,transfers,staffLoans,wasteLog,offers,monthEnd,dishCosts,monthlySales,monthClose,opexByMonth:{},costConfig:{mode:"rate",rate:35,openStock:0,closeStock:0,purOverride:null}};
 }
 
 /* ================= 数据持久化：Supabase 云端 ⇄ 本地存储 自动切换 =================
@@ -1108,10 +1108,30 @@ function calcRevenue(){ // 含税营业额（由销量×菜价，回退到 posGr
   if(s.length){return s.reduce((sum,row)=>{const r=(d().recipes||[]).find(x=>x.id===row.recipeId);return sum+(r?r.price*row.qty:0);},0);}
   return (d().fin&&d().fin.posGross)||0;
 }
-function calcCOGS(){ // 真实食材成本 = Σ(配方净成本 × 销量)
-  const s=salesData();
+/* ===== 成本核算方式（适合 buffet + 牛扒）=====
+   rate   ①成本率法：COGS = 净营业额 × 成本率%（当天/平时快速估算）
+   period ②进销存实耗法：COGS = 月初库存 + 本月进货 − 月末库存（月底结真账，最准）
+   bom    ③配方法：COGS = Σ(配方成本 × 销量)（招牌菜单品毛利）*/
+function costCfg(){
+  const c=(d().costConfig)||{};
+  return {mode:c.mode||'rate', rate:(c.rate!=null?c.rate:35), openStock:+c.openStock||0, closeStock:+c.closeStock||0, purOverride:(c.purOverride===''||c.purOverride==null)?null:+c.purOverride};
+}
+function monthPurchases(){ // 本月进货金额（自动：采购进货 type=in，按当前核算月）
+  const m=costMonth||TODAY.slice(0,7);
+  let sum=0;
+  (d().moves||[]).forEach(r=>{if(r.type==='in'&&String(r.date||'').slice(0,7)===m)sum+=(+r.amt||0);});
+  (d().purchases||[]).forEach(r=>{if(String(r.date||'').slice(0,7)===m)sum+=(+r.price||0);});
+  return sum;
+}
+function calcCOGS(){ // 依成本核算方式返回（整期金额，calcFin 再按日/周/月缩放）
+  const cfg=costCfg();
+  if(cfg.mode==='rate'){ return (calcRevenue()/1.06)*(cfg.rate/100); }
+  if(cfg.mode==='period'){ const pur=cfg.purOverride!=null?cfg.purOverride:monthPurchases(); return Math.max(0, cfg.openStock + pur - cfg.closeStock); }
+  const s=salesData(); // bom
   return s.reduce((sum,row)=>{const r=(d().recipes||[]).find(x=>x.id===row.recipeId);return sum+(r?recipeCost(r)*row.qty:0);},0);
 }
+async function setCostMode(m){const x=d();x.costConfig=x.costConfig||{};x.costConfig.mode=m;await save();render();}
+async function setCostParam(f,v){const x=d();x.costConfig=x.costConfig||{};x.costConfig[f]=v;await save();render();}
 function calcFin(){
   const x=d();const mult=dashRange==="day"?1/30:dashRange==="week"?7/30:1;
   const gross=calcRevenue()*mult;            // ← 由销量×菜价（未来=POS）
@@ -1146,6 +1166,29 @@ function pgDash(){
     <div class="kpi"><div class="k">${LANG==="zh"?"SST 6% 代收":"SST 6%"}</div><div class="v sm warnc">${money(f.sst)}</div><div class="s mini">${LANG==="zh"?"需另存缴税":"Set aside"}</div></div>
   </div>
 
+  ${(function(){const cfg=costCfg();const zh=LANG==="zh";const autoPur=monthPurchases();
+    const seg=`<div class="seg" style="margin-bottom:8px;flex-wrap:wrap;">
+      <button class="${cfg.mode==='rate'?'active':''}" onclick="setCostMode('rate')">${zh?"① 成本率(快)":"Rate"}</button>
+      <button class="${cfg.mode==='period'?'active':''}" onclick="setCostMode('period')">${zh?"② 进销存实耗(准)":"Period"}</button>
+      <button class="${cfg.mode==='bom'?'active':''}" onclick="setCostMode('bom')">${zh?"③ 配方(单品)":"BOM"}</button></div>`;
+    let body='';
+    if(cfg.mode==='rate'){
+      body=`<div class="fr" style="margin:0;max-width:260px;"><label>${zh?"食材成本率 Food Cost %":"Food Cost %"}</label>
+        <input type="number" step="0.5" value="${cfg.rate}" onchange="setCostParam('rate',+this.value)"> </div>
+        <div class="mini" style="margin-top:6px;">${zh?`快速估算：食材成本 = 净营业额 × ${cfg.rate}%。适合平时每天看大概。`:`COGS = Net Sales × ${cfg.rate}%`}</div>`;
+    }else if(cfg.mode==='period'){
+      body=`<div class="grid g3">
+        <div class="fr" style="margin:0;"><label>${zh?"月初库存 RM":"Opening RM"}</label><input type="number" step="0.01" value="${cfg.openStock}" onchange="setCostParam('openStock',+this.value)"></div>
+        <div class="fr" style="margin:0;"><label>${zh?"本月进货 RM":"Purchases RM"}</label><input type="number" step="0.01" placeholder="${autoPur.toFixed(2)}" value="${cfg.purOverride!=null?cfg.purOverride:''}" onchange="setCostParam('purOverride',this.value)"></div>
+        <div class="fr" style="margin:0;"><label>${zh?"月末库存 RM":"Closing RM"}</label><input type="number" step="0.01" value="${cfg.closeStock}" onchange="setCostParam('closeStock',+this.value)"></div>
+      </div>
+      <div class="mini" style="margin-top:6px;">${zh?`实耗成本 = 月初 ${money(cfg.openStock)} + 进货 ${money(cfg.purOverride!=null?cfg.purOverride:autoPur)}${cfg.purOverride==null?`（自动取${monthLabel2(costMonth)}采购）`:'（手动）'} − 月末 ${money(cfg.closeStock)}。月底盘点后填月末库存即可结真账。`:`COGS = Opening + Purchases − Closing`}</div>`;
+    }else{
+      body=`<div class="mini">${zh?"用每道菜的配方(BOM)×销量算成本。需先在「配方成本」给菜品建配方；适合招牌牛扒看单品毛利。Buffet 类不建议用此法。":"COGS = Σ recipe cost × qty. Build BOM first."}</div>`;
+    }
+    return `<h2 class="h">🧮 ${zh?"成本核算方式":"Costing Method"}</h2>
+      <div class="card" style="padding:13px;margin-bottom:12px;">${seg}${body}</div>`;
+  })()}
   ${(function(){const mp=monthlyPnL(costMonth);if(!(mp.rev||mp.cogs))return '';const cpc=mp.foodPct<28?'#0891B2':(mp.foodPct<=35?'var(--green)':'var(--red)');return `
   <h2 class="h">📅 ${LANG==="zh"?"月度核算":"Monthly Costing"} <span class="tag">${monthLabel2(costMonth)}${monthLocked(costMonth)?' 🔒':''}</span></h2>
   <div class="pl">
