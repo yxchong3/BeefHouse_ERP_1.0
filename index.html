@@ -713,26 +713,26 @@ function seed(outletId){
   ];
   const subRecipes=[];
   const recipes=[
-    {id:1,name:"B1 纯爱自助吧 JUST LOVE BUFFET",price:0,ing:[]},
-    {id:2,name:"B2 炸纽约客牛肉块 FRIED CHUNK STEAK",price:0,ing:[]},
-    {id:3,name:"B3 纽约客牛扒 STRIPLOIN STEAK",price:0,ing:[]},
-    {id:4,name:"B4 莎朗牛扒 SIRLOIN STEAK",price:0,ing:[]},
-    {id:5,name:"B5 骰子菲力牛扒 FILLET CUBE DICE",price:0,ing:[]},
-    {id:6,name:"B6 菲力牛扒 FILLET MIGNON STEAK",price:0,ing:[]},
-    {id:7,name:"B7 经典炸鸡排 FRIED CHICKEN CUTLET",price:0,ing:[]},
-    {id:8,name:"B8 香煎鸡腿扒 GRILLED CHICKEN CHOP",price:0,ing:[]},
-    {id:9,name:"B9 嫩肩羊扒 TENDER LAMB",price:0,ing:[]},
-    {id:10,name:"B10 酥炸鱼排 FRIED FISH CHOP",price:0,ing:[]},
-    {id:11,name:"B11 火烤鱿鱼排 GRILL SQUID BODY",price:0,ing:[]},
-    {id:12,name:"B12 酥炸综合海鲜 MIX FRIED SEAFOOD",price:0,ing:[]},
-    {id:13,name:"B13 香煎鲑鱼排 GRILL SALMON",price:0,ing:[]},
-    {id:14,name:"C1 日式天妇罗炸虾 FRIED SHRIMP",price:0,ing:[]},
-    {id:15,name:"C2 香酥炸鱼块 FRIED FISH NUGGET",price:0,ing:[]},
-    {id:16,name:"C3 酥炸鱿鱼花 FRIED SQUID",price:0,ing:[]},
-    {id:17,name:"D1 招牌熊熊奶茶 BEAR MILK TEA",price:0,ing:[]},
-    {id:18,name:"D2 特调红茶 BLACK TEA",price:0,ing:[]},
-    {id:19,name:"D3 特调奶茶 MILK TEA",price:0,ing:[]},
-    {id:20,name:"D4 经典珍珠奶茶 BUBBLE TEA",price:0,ing:[]},
+    {id:1,name:"B1 纯爱自助吧 JUST LOVE BUFFET",price:38.80,ing:[]},
+    {id:2,name:"B2 炸纽约客牛肉块 FRIED CHUNK STEAK",price:46.80,ing:[]},
+    {id:3,name:"B3 纽约客牛扒 STRIPLOIN STEAK",price:52.80,ing:[]},
+    {id:4,name:"B4 莎朗牛扒 SIRLOIN STEAK",price:58.80,ing:[]},
+    {id:5,name:"B5 骰子菲力牛扒 FILLET CUBE DICE",price:59.80,ing:[]},
+    {id:6,name:"B6 菲力牛扒 FILLET MIGNON STEAK",price:61.80,ing:[]},
+    {id:7,name:"B7 经典炸鸡排 FRIED CHICKEN CUTLET",price:48.80,ing:[]},
+    {id:8,name:"B8 香煎鸡腿扒 GRILLED CHICKEN CHOP",price:49.80,ing:[]},
+    {id:9,name:"B9 嫩肩羊扒 TENDER LAMB",price:58.80,ing:[]},
+    {id:10,name:"B10 酥炸鱼排 FRIED FISH CHOP",price:49.80,ing:[]},
+    {id:11,name:"B11 火烤鱿鱼排 GRILL SQUID BODY",price:55.80,ing:[]},
+    {id:12,name:"B12 酥炸综合海鲜 MIX FRIED SEAFOOD",price:58.80,ing:[]},
+    {id:13,name:"B13 香煎鲑鱼排 GRILL SALMON",price:64.80,ing:[]},
+    {id:14,name:"C1 日式天妇罗炸虾 FRIED SHRIMP",price:9.00,ing:[]},
+    {id:15,name:"C2 香酥炸鱼块 FRIED FISH NUGGET",price:9.00,ing:[]},
+    {id:16,name:"C3 酥炸鱿鱼花 FRIED SQUID",price:9.00,ing:[]},
+    {id:17,name:"D1 招牌熊熊奶茶 BEAR MILK TEA",price:10.00,ing:[]},
+    {id:18,name:"D2 特调红茶 BLACK TEA",price:5.00,ing:[]},
+    {id:19,name:"D3 特调奶茶 MILK TEA",price:5.00,ing:[]},
+    {id:20,name:"D4 经典珍珠奶茶 BUBBLE TEA",price:6.00,ing:[]},
     {id:21,name:"其他 Others",price:0,ing:[]},
   ];
   const moves=[];
@@ -867,12 +867,21 @@ const Store={
 };
 
 let DB={};
+/* 菜单售价（RM）——非破坏性同步：只更新菜价，不动其它任何数据 */
+const MENU_PV="bh-price-1";
+const MENU_PRICES={B1:38.80,B2:46.80,B3:52.80,B4:58.80,B5:59.80,B6:61.80,B7:48.80,B8:49.80,B9:58.80,B10:49.80,B11:55.80,B12:58.80,B13:64.80,C1:9.00,C2:9.00,C3:9.00,D1:10.00,D2:5.00,D3:5.00,D4:6.00};
+function syncMenuPrices(b){
+  if(!b||!Array.isArray(b.recipes))return false;
+  if(b._pv===MENU_PV)return false;
+  b.recipes.forEach(r=>{const code=String(r.name||'').split(' ')[0];if(MENU_PRICES[code]!=null)r.price=MENU_PRICES[code];});
+  b._pv=MENU_PV;return true;
+}
 async function loadDB(){
   for(const o of OUTLETS){
     let data=null;
     try{const r=await Store.get('erpv2:'+o.id);data=r?JSON.parse(r.value):null;}catch(e){data=null;}
-    if(!data || data._sv!==SEED_VERSION){ data=seed(o.id); DB[o.id]=data; try{await save(o.id);}catch(e){} }
-    else DB[o.id]=data;
+    if(!data || data._sv!==SEED_VERSION){ data=seed(o.id); DB[o.id]=data; syncMenuPrices(data); try{await save(o.id);}catch(e){} }
+    else { DB[o.id]=data; if(syncMenuPrices(data)){try{await save(o.id);}catch(e){}} }
   }
 }
 async function save(oid){try{await Store.set('erpv2:'+(oid||curOutlet),JSON.stringify(DB[oid||curOutlet]));}catch(e){}}
