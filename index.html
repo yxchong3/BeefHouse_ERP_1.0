@@ -761,7 +761,7 @@ function seed(outletId){
   const payables=[];
   const stocktakes = [];
   const opex={rent:4000,commission:2500,salaries:18500,epf:2405,socso:370,levy:640,ot:1200,electricity:2800,water:420,gas:980,wifi:180,rubbish:150,possaas:220,accounting:400,repair:350};
-  const fin={posGross:78500}; // 旧字段，保留兼容；实际营业额改由 sales 计算
+  const fin={posGross:0}; // 旧字段，保留兼容；实际营业额改由 sales 计算
   /* ========== 销售数据层（★ 未来 POS 接口位置 ★）==========
      现在：手动/模拟填每道菜的当月销量。
      未来：把这个 sales 数组换成 FirePOS/EPOS360 API 推送的销售明细即可，
@@ -807,7 +807,7 @@ function seed(outletId){
   const offers=[];
   /* ===== 月末算货（按供应商结算）===== */
   const monthEnd=[];
-  const dishCosts=[]; // 可编辑菜品成本表（用户导入/自建）
+  const dishCosts=recipes.map((r,i)=>({id:i+1,code:String(r.name).split(' ')[0],cn:r.name,en:"",price:r.price||0,ing:[]})); // 菜单同步：月度核算/录入销量用
   const monthlySales={}; // 按月销量：{ "2026-09": [{dishId, qty}] }（POS/手动）
   const monthClose={};   // 月度锁定档案：{ "2026-09": {locked,date,avgPrices,dishCost} }
   return {_sv:SEED_VERSION,items,recipes,subRecipes,moves,vendors,payables,stocktakes,opex,staff,attendance,schedule,leaves,sales,fin,audit,purchases,grn,transfers,staffLoans,wasteLog,offers,monthEnd,dishCosts,monthlySales,monthClose,opexByMonth:{},costConfig:{mode:"rate",rate:35,openStock:0,closeStock:0,purOverride:null}};
@@ -876,12 +876,19 @@ function syncMenuPrices(b){
   b.recipes.forEach(r=>{const code=String(r.name||'').split(' ')[0];if(MENU_PRICES[code]!=null)r.price=MENU_PRICES[code];});
   b._pv=MENU_PV;return true;
 }
+/* 月度核算/录入销量用的菜品表(dishCosts)：若为空则由菜单(recipes)自动生成，非破坏性 */
+function ensureDishCosts(b){
+  if(!b||!Array.isArray(b.recipes))return false;
+  if(Array.isArray(b.dishCosts)&&b.dishCosts.length>0)return false;
+  b.dishCosts=b.recipes.map((r,i)=>({id:i+1,code:String(r.name||'').split(' ')[0],cn:r.name,en:"",price:r.price||0,ing:[]}));
+  return true;
+}
 async function loadDB(){
   for(const o of OUTLETS){
     let data=null;
     try{const r=await Store.get('erpv2:'+o.id);data=r?JSON.parse(r.value):null;}catch(e){data=null;}
-    if(!data || data._sv!==SEED_VERSION){ data=seed(o.id); DB[o.id]=data; syncMenuPrices(data); try{await save(o.id);}catch(e){} }
-    else { DB[o.id]=data; if(syncMenuPrices(data)){try{await save(o.id);}catch(e){}} }
+    if(!data || data._sv!==SEED_VERSION){ data=seed(o.id); DB[o.id]=data; syncMenuPrices(data); ensureDishCosts(data); try{await save(o.id);}catch(e){} }
+    else { DB[o.id]=data; let ch=syncMenuPrices(data); if(ensureDishCosts(data))ch=true; if(ch){try{await save(o.id);}catch(e){}} }
   }
 }
 async function save(oid){try{await Store.set('erpv2:'+(oid||curOutlet),JSON.stringify(DB[oid||curOutlet]));}catch(e){}}
@@ -1102,11 +1109,11 @@ function setDashRange(r){dashRange=r;render();}
    改进货成本→加权单价变→recipeCost变→COGS变→净利变。全链联动。
    未来接 POS：只需让 salesData() 回传 POS 推送的销量。 */
 function salesData(){return d().sales||[];}
-function outletRevenue(id){const b=DB[id];if(!b)return 0;const s=b.sales||[];if(s.length){return s.reduce((sum,row)=>{const r=(b.recipes||[]).find(x=>x.id===row.recipeId);return sum+(r?r.price*row.qty:0);},0);}return (b.fin&&b.fin.posGross)||0;}
+function outletRevenue(id){const b=DB[id];if(!b)return 0;const s=b.sales||[];if(s.length){return s.reduce((sum,row)=>{const r=(b.recipes||[]).find(x=>x.id===row.recipeId);return sum+(r?r.price*row.qty:0);},0);}return 0;}
 function calcRevenue(){ // 含税营业额（由销量×菜价，回退到 posGross）
   const s=salesData();
   if(s.length){return s.reduce((sum,row)=>{const r=(d().recipes||[]).find(x=>x.id===row.recipeId);return sum+(r?r.price*row.qty:0);},0);}
-  return (d().fin&&d().fin.posGross)||0;
+  return 0;
 }
 /* ===== 成本核算方式（适合 buffet + 牛扒）=====
    rate   ①成本率法：COGS = 净营业额 × 成本率%（当天/平时快速估算）
