@@ -2608,6 +2608,7 @@ function gridRecalc(mod,sup){
     const ea=document.getElementById('gta-'+i);if(ea)ea.textContent=money(amt);});
   dates.forEach((dt,j)=>{let da=0;items.forEach(it=>da+=q(it,dt)*price(it));const ed=document.getElementById('gtd-'+j);if(ed)ed.textContent=money(da);});
   const gg=document.getElementById('gtg');if(gg)gg.textContent=money(grand);
+  const sm=document.getElementById('gridSummary');if(sm)sm.innerHTML=gridSummaryHTML(mod,sup,month); // 各货物本月总计即时更新
 }
 async function setGridQty(mod,sup,item,date,val){
   const qty=+val||0;const cfg=ledgerCfg(mod);d()[cfg.arr]=d()[cfg.arr]||[];const arr=d()[cfg.arr];
@@ -2685,14 +2686,18 @@ function pgLedger(mod){
   const curM=(ledgerMonth!=='all'&&months.includes(ledgerMonth))?ledgerMonth:(months.includes(TODAY.slice(0,7))?TODAY.slice(0,7):months[0]);
   const supHead=`<div class="fb"><h2 class="h" style="margin:0;">${cfg.icon} ${selSupplier}</h2><button class="btn ghost sm" onclick="backSupplier()">← ${LANG==="zh"?"供应商列表":"Suppliers"}</button></div>`;
   const tabs=`<div class="seg" style="flex-wrap:wrap;margin-bottom:8px;">${months.map(m=>`<button class="${m===curM?'active':''}" onclick="setLedgerMonth('${m}')">${monthLabel(m)}${writable&&!dataMonths.includes(m)?` <span class="ib" title="${LANG==="zh"?'从列表移除(空月)':'remove'}" onclick="event.stopPropagation();delGridMonth('${m}')">×</span>`:''}</button>`).join('')}${writable?`<button onclick="addGridMonth()">+ ${LANG==="zh"?"月份":"Month"}</button>`:''}</div>`;
-  const mrows=arrAll.filter(r=>(r.date||'').slice(0,7)===curM);
-  const mTot=sumField(mrows,'price');const summ=itemSummary(mrows);
-  const summHtml=summ.length?`<h2 class="h">📦 ${LANG==="zh"?"各货物本月总计":"Per-Item Totals"} <span class="tag">${monthLabel(curM)}</span></h2>
+  const hint=`<div class="hint">${LANG==="zh"?"选月份 → 直接在表格里填『数量』(输入即时算金额、即时更新总计)。品项>10个用『行=品项 列=日期』，≤10个用『行=日期 列=品项』。可『+品项』『+日期』或用 × / 🗑️ 删除，随时改。":"Pick a month, type quantities in the grid."} <span class="mini" style="opacity:.6;">build ${BUILD}</span></div>`;
+  return `${supHead}${tabs}${hint}${gridTable(mod,selSupplier,curM)}<div id="gridSummary">${gridSummaryHTML(mod,selSupplier,curM)}</div>`;
+}
+/* 各货物本月总计（可即时重建，不刷新页面） */
+function gridSummaryHTML(mod,sup,month){
+  const arr=(d()[ledgerCfg(mod).arr]||[]).filter(r=>r.supplier===sup&&(r.date||'').slice(0,7)===month);
+  const mTot=sumField(arr,'price');const summ=itemSummary(arr);
+  if(!summ.length)return '';
+  return `<h2 class="h">📦 ${LANG==="zh"?"各货物本月总计":"Per-Item Totals"} <span class="tag">${monthLabel(month)}</span></h2>
     <div class="card tbl" style="overflow-x:auto;"><table><thead><tr><th>${LANG==="zh"?"品名":"Item"}</th><th>${LANG==="zh"?"总数量":"Qty"}</th><th>${LANG==="zh"?"总价钱":"Total"}</th></tr></thead><tbody>
     ${summ.map(s=>`<tr><td><b>${s.item}</b></td><td>${num(s.qty,2)}</td><td>${money(s.price)}</td></tr>`).join('')}
-    <tr style="background:#FAFBFC;font-weight:800;"><td colspan="2">${LANG==="zh"?"本月合计":"Month Total"}</td><td>${money(mTot)}</td></tr></tbody></table></div>`:'';
-  const hint=`<div class="hint">${LANG==="zh"?"选月份 → 直接在表格里填『数量』(输入即时算金额)。品项>10个用『行=品项 列=日期』，≤10个用『行=日期 列=品项』。可『+品项』『+日期』或用 × / 🗑️ 删除，随时改。":"Pick a month, type quantities in the grid."} <span class="mini" style="opacity:.6;">build ${BUILD}</span></div>`;
-  return `${supHead}${tabs}${hint}${gridTable(mod,selSupplier,curM)}${summHtml}`;
+    <tr style="background:#FAFBFC;font-weight:800;"><td colspan="2">${LANG==="zh"?"本月合计":"Month Total"}</td><td>${money(mTot)}</td></tr></tbody></table></div>`;
 }
 
 /* ---- 采购/验收/月末 共用表单（支持新增与编辑）---- */
