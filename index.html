@@ -496,7 +496,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
-const BUILD="0911c";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
+const BUILD="0911d";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -2589,12 +2589,12 @@ function ensureGridCat(sup){d().gridCat=d().gridCat||{};if(!d().gridCat[sup]){le
 function ensureGridMonths(){if(!Array.isArray(d().gridMonths))d().gridMonths=monthsFrom('2026-06');return d().gridMonths;}
 async function addGridMonth(){const m=(prompt(LANG==="zh"?"添加月份 (YYYY-MM)：":"Add month (YYYY-MM):",TODAY.slice(0,7))||'').trim();if(!/^\d{4}-\d{2}$/.test(m))return;const gm=ensureGridMonths();if(!gm.includes(m))gm.push(m);await save();render();}
 async function delGridMonth(m){const gm=ensureGridMonths();const i=gm.indexOf(m);if(i>=0)gm.splice(i,1);await save();render();}
-async function setGridSpec(mod,sup,item,val){const c=ensureGridCat(sup).find(x=>x.name===item);if(c)c.spec=val;(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.item===item)r.spec=val;});save();}
+async function setGridSpec(mod,sup,item,val){const c=ensureGridCat(sup).find(x=>x.name===item);if(c)c.spec=val;(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.item===item)r.spec=val;});gridSave(mod,sup);}
 function gridInv(mod,sup,date){const k=mod+'|'+sup+'|'+date;if(d().gridInv&&d().gridInv[k]!=null)return d().gridInv[k];const r=(d()[ledgerCfg(mod).arr]||[]).find(x=>x.supplier===sup&&x.date===date&&x.invoice);return r?r.invoice:'';}
-async function setGridInv(mod,sup,date,val){const k=mod+'|'+sup+'|'+date;d().gridInv=d().gridInv||{};d().gridInv[k]=val;(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.date===date)r.invoice=val;});save();}
-async function setGridUom(mod,sup,item,val){const c=ensureGridCat(sup).find(x=>x.name===item);if(c)c.uom=val;(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.item===item)r.uom=val;});save();}
+async function setGridInv(mod,sup,date,val){const k=mod+'|'+sup+'|'+date;d().gridInv=d().gridInv||{};d().gridInv[k]=val;(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.date===date)r.invoice=val;});gridSave(mod,sup);}
+async function setGridUom(mod,sup,item,val){const c=ensureGridCat(sup).find(x=>x.name===item);if(c)c.uom=val;(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.item===item)r.uom=val;});gridSave(mod,sup);}
 async function setGridName(mod,sup,oldName,val){const nn=(val||'').trim();if(!nn||nn===oldName)return;const cat=ensureGridCat(sup);if(cat.some(c=>c.name===nn))return alert(LANG==="zh"?"已有同名品项":"Name exists");const c=cat.find(x=>x.name===oldName);if(c)c.name=nn;(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.item===oldName)r.item=nn;});await save();render();}
-async function setGridCode(mod,sup,item,val){const c=ensureGridCat(sup).find(x=>x.name===item);if(c)c.code=(val||'').trim();(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.item===item)r.code=(val||'').trim();});save();}
+async function setGridCode(mod,sup,item,val){const c=ensureGridCat(sup).find(x=>x.name===item);if(c)c.code=(val||'').trim();(d()[ledgerCfg(mod).arr]||[]).forEach(r=>{if(r.supplier===sup&&r.item===item)r.code=(val||'').trim();});gridSave(mod,sup);}
 function gridDates(mod,sup,month){const[y,m]=month.split('-').map(Number);const last=new Date(y,m,0).getDate();const res=[];for(let dd=1;dd<=last;dd++)res.push(month+'-'+String(dd).padStart(2,'0'));return res;} // 整月每一天（每天进货）
 function gridRec(mod,sup,item,date){const arr=d()[ledgerCfg(mod).arr]||[];return arr.find(r=>r.supplier===sup&&r.item===item&&r.date===date);}
 /* 只更新合计、不重画整表 → 输入即时不卡顿 */
@@ -2610,8 +2610,12 @@ function gridRecalc(mod,sup){
     const ea=document.getElementById('gta-'+i);if(ea)ea.textContent=money(amt);});
   dates.forEach((dt,j)=>{const ed=document.getElementById('gtd-'+j);if(ed)ed.textContent=money(dayTot[j]);});
   const gg=document.getElementById('gtg');if(gg)gg.textContent=money(grand);
-  const sm=document.getElementById('gridSummary');if(sm)sm.innerHTML=gridSummaryHTML(mod,sup,month); // 各货物本月总计即时更新
 }
+/* 打字时只即时算合计(超轻量)；存档+摘要重建延后到停手 0.4 秒，避免每键序列化整库造成卡顿 */
+let _gridSaveT=null,_gridSaveCtx=null;
+function gridSave(mod,sup){_gridSaveCtx={mod,sup};if(_gridSaveT)clearTimeout(_gridSaveT);_gridSaveT=setTimeout(()=>{_gridSaveT=null;save();const sm=document.getElementById('gridSummary');if(sm&&_gridSaveCtx)sm.innerHTML=gridSummaryHTML(_gridSaveCtx.mod,_gridSaveCtx.sup,ledgerMonth);},400);}
+function gridSaveFlush(){if(_gridSaveT){clearTimeout(_gridSaveT);_gridSaveT=null;save();}}
+if(typeof window!=='undefined')window.addEventListener('beforeunload',gridSaveFlush);
 async function setGridQty(mod,sup,item,date,val){
   const qty=+val||0;const cfg=ledgerCfg(mod);d()[cfg.arr]=d()[cfg.arr]||[];const arr=d()[cfg.arr];
   const cat=ensureGridCat(sup).find(c=>c.name===item);const unit=cat?+cat.price||0:0;
@@ -2620,9 +2624,9 @@ async function setGridQty(mod,sup,item,date,val){
   else{if(!rec){rec={supplier:sup,date,item,code:cat?cat.code:'',qty:0,weight:0,unitPrice:unit,price:0,note:''};arr.push(rec);}
     rec.unitPrice=unit;rec.qty=qty;rec.price=+(qty*unit).toFixed(2);if(cat){rec.code=cat.code;rec.uom=cat.uom||'';}rec.invoice=gridInv(mod,sup,date);
     if(mod==='purchase'){const dq=qty-oldQty;if(dq>0)invReceive(item,dq,dq*unit,null,null,date);else if(dq<0)invUnreceive(item,-dq);}}
-  gridRecalc(mod,sup);save(); // 即时更新合计 + 后台保存，不重画
+  gridRecalc(mod,sup);gridSave(mod,sup); // 即时算合计；存档延后防卡
 }
-async function setGridPrice(mod,sup,item,val){const price=+val||0;const c=ensureGridCat(sup).find(x=>x.name===item);if(c)c.price=price;const arr=d()[ledgerCfg(mod).arr]||[];arr.forEach(r=>{if(r.supplier===sup&&r.item===item){r.unitPrice=price;r.price=+((+r.qty||0)*price).toFixed(2);}});gridRecalc(mod,sup);save();}
+async function setGridPrice(mod,sup,item,val){const price=+val||0;const c=ensureGridCat(sup).find(x=>x.name===item);if(c)c.price=price;const arr=d()[ledgerCfg(mod).arr]||[];arr.forEach(r=>{if(r.supplier===sup&&r.item===item){r.unitPrice=price;r.price=+((+r.qty||0)*price).toFixed(2);}});gridRecalc(mod,sup);gridSave(mod,sup);}
 async function addGridItem(sup){const n=(prompt(LANG==="zh"?"新增品项名称：":"New item name:")||'').trim();if(!n)return;const cat=ensureGridCat(sup);if(!cat.some(c=>c.name===n)){const it=findItem(n);cat.push({name:n,code:'',price:it?+it.cost||0:0});}await save();render();}
 async function delGridItem(mod,sup,item,month){if(!confirm((LANG==="zh"?"移除品项『"+item+"』？会删除它本月的录入。":"Remove item "+item+"?")))return;const cat=ensureGridCat(sup);const i=cat.findIndex(c=>c.name===item);if(i>=0)cat.splice(i,1);const arr=d()[ledgerCfg(mod).arr]||[];for(let k=arr.length-1;k>=0;k--){const r=arr[k];if(r.supplier===sup&&r.item===item&&(r.date||'').slice(0,7)===month){if(mod==='purchase')invUnreceive(item,+r.qty||0);arr.splice(k,1);}}await save();render();}
 async function addGridDate(mod,sup,month){const def=(TODAY.slice(0,7)===month)?TODAY:(month+'-01');const dt=(prompt(LANG==="zh"?"添加日期 (YYYY-MM-DD)：":"Add date (YYYY-MM-DD):",def)||'').trim();if(!/^\d{4}-\d{2}-\d{2}$/.test(dt))return;if(dt.slice(0,7)!==month)return alert(LANG==="zh"?"日期必须在本月内":"Date must be in this month");const key=mod+'|'+sup+'|'+month;d().gridExtra=d().gridExtra||{};d().gridExtra[key]=d().gridExtra[key]||[];if(!d().gridExtra[key].includes(dt))d().gridExtra[key].push(dt);await save();render();}
