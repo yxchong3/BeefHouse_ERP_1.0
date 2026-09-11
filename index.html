@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>牛室炙烤牛排 · 多分店进销存系统</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -493,6 +496,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
+const BUILD="0911a";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -2638,7 +2642,7 @@ function gridTable(mod,sup,month){
   if(items.length>10){
     // 行=品项，列=日期（整月每天）；品名/单位/规格/单价 冻结在左边
     const head=`<th class="gcode">Code</th><th class="gname">${zh?"品名":"Item"}</th><th class="gunit">${zh?"单位":"Unit"}</th><th class="gpack">${zh?"规格/送货":"Pack"}</th><th class="gprice">${zh?"单价":"Price"}</th>`+dates.map(dt=>`<th class="gcell">${w?`<input placeholder="Invoice No." value="${inv(dt)}" onchange="setGridInv('${mod}','${gEsc(sup)}','${dt}',this.value)">`:`<span class="mini">${inv(dt)||'—'}</span>`}<div class="mini" style="margin-top:2px;">${dt.slice(5)}</div></th>`).join('')+`<th>${zh?"合计量":"Total Qty"}</th><th>${zh?"合计RM":"Total RM"}</th>${w?'<th></th>':''}`;
-    const body=items.map((it,i)=>`<tr><td class="gcode"><input value="${(cat.find(x=>x.name===it)||{}).code||''}" ${w?'':'disabled'} onchange="setGridCode('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td><td class="gname"><input style="text-align:left;font-weight:700;" value="${it}" ${w?'':'disabled'} onchange="setGridName('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td><td class="gunit"><input value="${uom(it)}" ${w?'':'disabled'} onchange="setGridUom('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td><td class="gpack"><input placeholder="10kg x 6/ctn" value="${spec(it)}" ${w?'':'disabled'} onchange="setGridSpec('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td><td class="gprice"><input type="number" step="0.01" value="${price(it)}" ${w?'':'disabled'} onchange="setGridPrice('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>${dates.map(dt=>`<td class="gcell"><input type="number" step="0.01" value="${q(it,dt)}" ${w?'':'disabled'} onchange="setGridQty('${mod}','${gEsc(sup)}','${gEsc(it)}','${dt}',this.value)"></td>`).join('')}<td class="gtot" id="gtq-${i}">${num(rQty(it),2)}</td><td class="gtot" id="gta-${i}">${money(rAmt(it))}</td>${w?`<td style="text-align:center;"><span class="ib" onclick="delGridItem('${mod}','${gEsc(sup)}','${gEsc(it)}','${month}')">🗑️</span></td>`:''}</tr>`).join('')||`<tr><td colspan="${7+dates.length}" class="empty">${zh?"点『+ 品项』添加":"Add items"}</td></tr>`;
+    const body=items.map((it,i)=>`<tr><td class="gcode"><input value="${(cat.find(x=>x.name===it)||{}).code||''}" ${w?'':'disabled'} onchange="setGridCode('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td><td class="gname"><input style="text-align:left;font-weight:700;" value="${it}" ${w?'':'disabled'} onchange="setGridName('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td><td class="gunit"><input value="${uom(it)}" ${w?'':'disabled'} onchange="setGridUom('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td><td class="gpack"><input placeholder="10kg x 6/ctn" value="${spec(it)}" ${w?'':'disabled'} onchange="setGridSpec('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td><td class="gprice"><input type="number" step="0.01" value="${price(it)}" ${w?'':'disabled'} onchange="setGridPrice('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>${dates.map(dt=>`<td class="gcell"><input type="number" step="0.01" value="${q(it,dt)}" ${w?'':'disabled'} oninput="setGridQty('${mod}','${gEsc(sup)}','${gEsc(it)}','${dt}',this.value)"></td>`).join('')}<td class="gtot" id="gtq-${i}">${num(rQty(it),2)}</td><td class="gtot" id="gta-${i}">${money(rAmt(it))}</td>${w?`<td style="text-align:center;"><span class="ib" onclick="delGridItem('${mod}','${gEsc(sup)}','${gEsc(it)}','${month}')">🗑️</span></td>`:''}</tr>`).join('')||`<tr><td colspan="${7+dates.length}" class="empty">${zh?"点『+ 品项』添加":"Add items"}</td></tr>`;
     const dailyRow=`<tr class="gsum"><td class="gcode"></td><td class="gname">${zh?"每日合计RM":"Daily Total"}</td><td class="gunit"></td><td class="gpack"></td><td class="gprice"></td>${dates.map((dt,j)=>`<td id="gtd-${j}">${money(items.reduce((s,it)=>s+(+q(it,dt)||0)*price(it),0))}</td>`).join('')}<td></td><td></td>${w?'<td></td>':''}</tr>`;
     return `${controls}<div class="gwrap"><table class="gtbl"><thead><tr>${head}</tr></thead><tbody>${body}<tr class="gsum"><td class="gcode"></td><td class="gname">${zh?"本月合计":"Month Total"}</td><td class="gunit"></td><td class="gpack"></td><td class="gprice"></td>${dates.map(()=>'<td></td>').join('')}<td></td><td id="gtg">${money(grand)}</td>${w?'<td></td>':''}</tr>${dailyRow}</tbody></table></div>`;
   }
@@ -2648,7 +2652,7 @@ function gridTable(mod,sup,month){
   const priceRow=`<tr><td class="gdate" style="font-weight:700;">${zh?"单价RM":"Price"}</td><td></td>${items.map(it=>`<td><input type="number" step="0.01" value="${price(it)}" ${w?'':'disabled'} onchange="setGridPrice('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
   const uomRow=`<tr><td class="gdate" style="font-weight:700;">${zh?"单位":"Unit"}</td><td></td>${items.map(it=>`<td><input value="${uom(it)}" ${w?'':'disabled'} onchange="setGridUom('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
   const specRow=`<tr><td class="gdate" style="font-weight:700;">${zh?"规格":"Pack"}</td><td></td>${items.map(it=>`<td><input placeholder="10kg x 6/ctn" value="${spec(it)}" ${w?'':'disabled'} onchange="setGridSpec('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
-  const body=dates.map((dt,j)=>{const dayAmt=items.reduce((s,it)=>s+(+q(it,dt)||0)*price(it),0);return `<tr><td class="gdate">${dt.slice(5)}</td><td>${w?`<input placeholder="Invoice No." value="${inv(dt)}" onchange="setGridInv('${mod}','${gEsc(sup)}','${dt}',this.value)">`:(inv(dt)||'—')}</td>${items.map(it=>`<td class="gcell"><input type="number" step="0.01" value="${q(it,dt)}" ${w?'':'disabled'} onchange="setGridQty('${mod}','${gEsc(sup)}','${gEsc(it)}','${dt}',this.value)"></td>`).join('')}<td class="gtot" id="gtd-${j}">${money(dayAmt)}</td></tr>`;}).join('')||`<tr><td colspan="${items.length+3}" class="empty">${zh?"点『+ 品项』添加品项":"Add items"}</td></tr>`;
+  const body=dates.map((dt,j)=>{const dayAmt=items.reduce((s,it)=>s+(+q(it,dt)||0)*price(it),0);return `<tr><td class="gdate">${dt.slice(5)}</td><td>${w?`<input placeholder="Invoice No." value="${inv(dt)}" onchange="setGridInv('${mod}','${gEsc(sup)}','${dt}',this.value)">`:(inv(dt)||'—')}</td>${items.map(it=>`<td class="gcell"><input type="number" step="0.01" value="${q(it,dt)}" ${w?'':'disabled'} oninput="setGridQty('${mod}','${gEsc(sup)}','${gEsc(it)}','${dt}',this.value)"></td>`).join('')}<td class="gtot" id="gtd-${j}">${money(dayAmt)}</td></tr>`;}).join('')||`<tr><td colspan="${items.length+3}" class="empty">${zh?"点『+ 品项』添加品项":"Add items"}</td></tr>`;
   return `${controls}<div class="gwrap"><table class="gtbl"><thead><tr>${head}</tr></thead><tbody>${items.length?codeRow+priceRow+uomRow+specRow:''}${body}<tr class="gsum"><td class="gdate">${zh?"合计":"Total"}</td><td></td>${items.map((it,i)=>`<td id="gta-${i}">${money(rAmt(it))}</td>`).join('')}<td id="gtg">${money(grand)}</td></tr></tbody></table></div>`;
 }
 
@@ -2687,7 +2691,7 @@ function pgLedger(mod){
     <div class="card tbl" style="overflow-x:auto;"><table><thead><tr><th>${LANG==="zh"?"品名":"Item"}</th><th>${LANG==="zh"?"总数量":"Qty"}</th><th>${LANG==="zh"?"总价钱":"Total"}</th></tr></thead><tbody>
     ${summ.map(s=>`<tr><td><b>${s.item}</b></td><td>${num(s.qty,2)}</td><td>${money(s.price)}</td></tr>`).join('')}
     <tr style="background:#FAFBFC;font-weight:800;"><td colspan="2">${LANG==="zh"?"本月合计":"Month Total"}</td><td>${money(mTot)}</td></tr></tbody></table></div>`:'';
-  const hint=`<div class="hint">${LANG==="zh"?"选月份 → 直接在表格里填『数量』(每格自动算金额)。品项>10个用『行=品项 列=日期』，≤10个用『行=日期 列=品项』。可『+品项』『+日期』或用 × / 🗑️ 删除，随时改。":"Pick a month, type quantities in the grid."}</div>`;
+  const hint=`<div class="hint">${LANG==="zh"?"选月份 → 直接在表格里填『数量』(输入即时算金额)。品项>10个用『行=品项 列=日期』，≤10个用『行=日期 列=品项』。可『+品项』『+日期』或用 × / 🗑️ 删除，随时改。":"Pick a month, type quantities in the grid."} <span class="mini" style="opacity:.6;">build ${BUILD}</span></div>`;
   return `${supHead}${tabs}${hint}${gridTable(mod,selSupplier,curM)}${summHtml}`;
 }
 
