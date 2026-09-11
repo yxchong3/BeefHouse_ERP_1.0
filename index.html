@@ -496,7 +496,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
-const BUILD="0911e";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
+const BUILD="0911f";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -2462,6 +2462,7 @@ function exportCSV(){
    ================================================================ */
 let selSupplier=null;                          // 供应商钻取页共用：当前选中供应商
 let ledgerMonth='all';                         // 账册月份筛选（YYYY-MM 或 all）
+let gridCurMonth='';                            // 当前网格实际渲染的月份（合计计算以此为准，避免 ledgerMonth='all' 导致合计归零）
 function setLedgerMonth(v){ledgerMonth=v;render();window.scrollTo(0,0);}
 function monthLabel(ymk){if(ymk==='all')return LANG==="zh"?"全部月份":"All months";const[y,m]=ymk.split('-');return LANG==="zh"?(y+"年"+(+m)+"月"):(ymk);}
 const PROC_SUB={purchase:'proc',grn:'proc',transfer:'transfer',waste2:'waste',offer:'ent',monthend:'stock'};
@@ -2600,7 +2601,7 @@ function gridDates(mod,sup,month){const[y,m]=month.split('-').map(Number);const 
 function gridRec(mod,sup,item,date){const arr=d()[ledgerCfg(mod).arr]||[];return arr.find(r=>r.supplier===sup&&r.item===item&&r.date===date);}
 /* 只更新合计、不重画整表 → 输入即时不卡顿 */
 function gridRecalc(mod,sup){
-  const month=ledgerMonth;const cat=ensureGridCat(sup);const items=cat.map(c=>c.name);const dates=gridDates(mod,sup,month);
+  const month=gridCurMonth||ledgerMonth;const cat=ensureGridCat(sup);const items=cat.map(c=>c.name);const dates=gridDates(mod,sup,month);
   const price=it=>{const c=cat.find(x=>x.name===it);return c?+c.price||0:0;};
   const q=(it,dt)=>{const r=gridRec(mod,sup,it,dt);return r?(+r.qty||0):0;};
   const dayTot=new Array(dates.length).fill(0);let grand=0;
@@ -2614,7 +2615,7 @@ function gridRecalc(mod,sup){
 }
 /* 打字时只即时算合计(超轻量)；存档+摘要重建延后到停手 0.4 秒，避免每键序列化整库造成卡顿 */
 let _gridSaveT=null,_gridSaveCtx=null;
-function gridSave(mod,sup){_gridSaveCtx={mod,sup};if(_gridSaveT)clearTimeout(_gridSaveT);_gridSaveT=setTimeout(()=>{_gridSaveT=null;save();const sm=document.getElementById('gridSummary');if(sm&&_gridSaveCtx)sm.innerHTML=gridSummaryHTML(_gridSaveCtx.mod,_gridSaveCtx.sup,ledgerMonth);},400);}
+function gridSave(mod,sup){_gridSaveCtx={mod,sup};if(_gridSaveT)clearTimeout(_gridSaveT);_gridSaveT=setTimeout(()=>{_gridSaveT=null;save();const sm=document.getElementById('gridSummary');if(sm&&_gridSaveCtx)sm.innerHTML=gridSummaryHTML(_gridSaveCtx.mod,_gridSaveCtx.sup,gridCurMonth||ledgerMonth);},400);}
 function gridSaveFlush(){if(_gridSaveT){clearTimeout(_gridSaveT);_gridSaveT=null;save();}}
 if(typeof window!=='undefined')window.addEventListener('beforeunload',gridSaveFlush);
 async function setGridQty(mod,sup,item,date,val){
@@ -2633,6 +2634,7 @@ async function delGridItem(mod,sup,item,month){if(!confirm((LANG==="zh"?"移除�
 async function addGridDate(mod,sup,month){const def=(TODAY.slice(0,7)===month)?TODAY:(month+'-01');const dt=(prompt(LANG==="zh"?"添加日期 (YYYY-MM-DD)：":"Add date (YYYY-MM-DD):",def)||'').trim();if(!/^\d{4}-\d{2}-\d{2}$/.test(dt))return;if(dt.slice(0,7)!==month)return alert(LANG==="zh"?"日期必须在本月内":"Date must be in this month");const key=mod+'|'+sup+'|'+month;d().gridExtra=d().gridExtra||{};d().gridExtra[key]=d().gridExtra[key]||[];if(!d().gridExtra[key].includes(dt))d().gridExtra[key].push(dt);await save();render();}
 async function delGridDate(mod,sup,month,date){if(!confirm((LANG==="zh"?"删除日期列 "+date+"？":"Delete date "+date+"?")))return;const arr=d()[ledgerCfg(mod).arr]||[];for(let k=arr.length-1;k>=0;k--){const r=arr[k];if(r.supplier===sup&&r.date===date){if(mod==='purchase')invUnreceive(r.item,+r.qty||0);arr.splice(k,1);}}const key=mod+'|'+sup+'|'+month;if(d().gridExtra&&d().gridExtra[key])d().gridExtra[key]=d().gridExtra[key].filter(x=>x!==date);await save();render();}
 function gridTable(mod,sup,month){
+  gridCurMonth=month; // 记录本表实际月份，合计计算(gridRecalc)以此为准
   const zh=LANG==="zh";const w=subCanW(mod);const CI='style="width:62px;padding:4px 5px;font-size:12px;border:1px solid var(--line);border-radius:5px;"';
   const cat=ensureGridCat(sup);const items=cat.map(c=>c.name);const dates=gridDates(mod,sup,month);
   const price=it=>{const c=cat.find(x=>x.name===it);return c?+c.price||0:0;};
