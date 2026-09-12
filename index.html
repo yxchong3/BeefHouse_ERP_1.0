@@ -30,6 +30,13 @@
   .gtbl thead th{position:sticky;top:0;z-index:3;background:#E8EDF3;color:#12203A;font-weight:700;padding:5px 6px;border-bottom:2px solid #333;text-align:center;}
   .gtbl input{width:100%;box-sizing:border-box;border:0;padding:7px 6px;font-size:12px;background:transparent;text-align:center;font-family:inherit;}
   .gtbl input:focus{outline:2px solid var(--gold);outline-offset:-2px;background:#FFFBEB;}
+  /* 去掉数字输入框的上下箭头，让价钱和 kg/规格 完全居中对齐 */
+  .gtbl input[type=number]{-moz-appearance:textfield;}
+  .gtbl input[type=number]::-webkit-outer-spin-button,.gtbl input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  /* ≤10 表头：品名输入 + 删除键并排，删除键始终可见 */
+  .gtbl th .gih{display:flex;align-items:center;gap:4px;justify-content:center;}
+  .gtbl th .gih input{width:auto;flex:1;min-width:70px;}
+  .gtbl th .gih .gidel{flex:none;color:#B42318;border-color:#B42318;padding:2px 6px;}
   .gtbl .gcell{min-width:74px;}
   .gtbl td.gcode,.gtbl th.gcode{position:sticky;left:0;z-index:2;min-width:74px;max-width:74px;}
   .gtbl td.gname,.gtbl th.gname{position:sticky;left:74px;z-index:2;text-align:left;font-weight:700;padding:7px 8px;min-width:180px;max-width:180px;box-shadow:1px 0 0 #333;}
@@ -504,7 +511,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
-const BUILD="0912a";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
+const BUILD="0912b";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -2665,7 +2672,7 @@ function gridTable(mod,sup,month){
     return `${controls}<div class="gwrap"><table class="gtbl"><thead><tr>${head}</tr></thead><tbody>${body}<tr class="gsum"><td class="gcode"></td><td class="gname">${zh?"本月合计":"Month Total"}</td><td class="gunit"></td><td class="gpack"></td><td class="gprice"></td>${dates.map(()=>'<td></td>').join('')}<td></td><td id="gtg">${money(grand)}</td>${w?'<td></td>':''}</tr>${dailyRow}</tbody></table></div>`;
   }
   // ≤10：行=日期（整月每天），列=品项；上方 单价 / 单位 / 规格 行；日期冻结在左边
-  const head=`<th class="gdate">${zh?"日期":"Date"}</th><th>Invoice No.</th>`+items.map(it=>`<th>${w?`<input style="font-weight:700;min-width:90px;" value="${it}" onchange="setGridName('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"> <span class="ib" onclick="delGridItem('${mod}','${gEsc(sup)}','${gEsc(it)}','${month}')">×</span>`:it}</th>`).join('')+`<th>${zh?"当日RM":"Amt"}</th>`;
+  const head=`<th class="gdate">${zh?"日期":"Date"}</th><th>Invoice No.</th>`+items.map(it=>`<th>${w?`<div class="gih"><input style="font-weight:700;" value="${it}" onchange="setGridName('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"><span class="ib gidel" title="${zh?'删除品项':'Delete item'}" onclick="delGridItem('${mod}','${gEsc(sup)}','${gEsc(it)}','${month}')">🗑️</span></div>`:it}</th>`).join('')+`<th>${zh?"当日RM":"Amt"}</th>`;
   const codeRow=`<tr class="ghdr"><td class="gdate ghlab">Code</td><td></td>${items.map(it=>`<td><input value="${(cat.find(x=>x.name===it)||{}).code||''}" ${w?'':'disabled'} onchange="setGridCode('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
   const priceRow=`<tr class="ghdr"><td class="gdate ghlab">${zh?"单价RM":"Price"}</td><td></td>${items.map(it=>`<td><input type="number" step="0.01" value="${price(it)}" ${w?'':'disabled'} onchange="setGridPrice('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
   const uomRow=`<tr class="ghdr"><td class="gdate ghlab">${zh?"单位":"Unit"}</td><td></td>${items.map(it=>`<td><input value="${uom(it)}" ${w?'':'disabled'} onchange="setGridUom('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
