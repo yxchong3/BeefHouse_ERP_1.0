@@ -94,6 +94,16 @@
   .opre{font-size:10px;font-weight:700;color:#b45309;background:#fef3c7;border-radius:4px;padding:1px 5px;margin-left:4px;}
   .oadd{margin-top:6px;}
   @media print{.top,.sidebar,#sidebar,.seg,.hint,.obanner ~ div,.oadd,.odel,.odivdel{display:none !important;}.owrap{grid-template-columns:repeat(3,1fr);}}
+  /* 中央厨房 · 生产成本格子 */
+  .pctbl{width:100%;border-collapse:collapse;font-size:13px;background:#fff;min-width:640px;}
+  .pctbl th,.pctbl td{border:1px solid #333;padding:6px 8px;white-space:nowrap;}
+  .pctbl thead th{position:sticky;top:0;background:#E8EDF3;color:#12203A;font-weight:800;text-align:center;z-index:2;}
+  .pctbl td.pcid{background:#F3F6FB;text-align:center;}
+  .pctbl td.pcname{background:#EDF2F9;text-align:left;font-weight:700;min-width:190px;white-space:normal;}
+  .pctbl td.pcnum{padding:0;}
+  .pctbl td.pcnum input{width:100%;border:0;text-align:center;font:inherit;font-weight:700;background:transparent;padding:8px 4px;box-sizing:border-box;}
+  .pctbl td.pcnum input:focus{outline:2px solid var(--gold);outline-offset:-2px;background:#FFFBEB;}
+  .pctbl td.pcresult{font-weight:800;text-align:right;background:#FAFBFC;color:#0f766e;}
   .gtbl td.gtot{background:#FAFBFC;font-weight:700;text-align:right;padding:6px 8px;}
   .gtbl tr.gsum td{background:#F2F4F7;font-weight:800;padding:6px 8px;}
   .gtbl td.gdate,.gtbl th.gdate{position:sticky;left:0;z-index:2;min-width:64px;max-width:64px;text-align:center;box-shadow:1px 0 0 #333;background:#fff;}
@@ -554,7 +564,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
-const BUILD="0912i";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
+const BUILD="0912j";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -1125,7 +1135,7 @@ function auditLog(act,detail,oldv,newv){
 function can(p){return ROLES[curRole].can.includes(p);}
 // 作业中心(proc)只要拥有任一子作业权限即可进入；子页与页面级访问统一由 pageAllowed 判定
 function hasAnyOp(){return ['proc','transfer','waste','ent','stock'].some(p=>can(p));}
-function pageAllowed(p){if(p==='proc')return hasAnyOp();if(p==='monthly')return can('report');if(p==='ck')return can('ck')||(typeof ckCanOrderQty==='function'&&ckCanOrderQty());if(typeof PROC_SUB!=='undefined'&&PROC_SUB[p])return can(PROC_SUB[p]);return can(p);}
+function pageAllowed(p){if(p==='proc')return hasAnyOp();if(p==='monthly')return can('report');if(typeof PROC_SUB!=='undefined'&&PROC_SUB[p])return can(PROC_SUB[p]);return can(p);}
 function firstAllowedPage(){const order=['dash','attend','leave','payroll','hr','schedule','sales','inv','proc','ck','stock','opex','ap','bom','report','settings'];for(const p of order)if(pageAllowed(p))return p;return 'dash';}
 function canW(p){return can(p)&&!isAgg();} // 汇总视图为只读
 function renderTop(){
@@ -2216,19 +2226,41 @@ function pgOrderSheet(){
   if(isCkOrderSup(selSupplier))return supHead+orderListHTML();   // 中央厨房订货表（有照片）
   return supHead+osTable(selSupplier);
 }
+/* ---------- 中央厨房 · 生产成本（格子式：大锅成本 ÷ 包数 = 单包成本）---------- */
+function prodCentralSup(){return (supplierList().map(v=>v.name).find(isCkOrderSup))||'(中央)TCY OKR SB';}
+function prodStore(){return DB['ck']||d();}
+function prodCostMap(){const s=prodStore();s.prodCost=s.prodCost||{};return s.prodCost;}
+let _pcT=null;
+function prodSave(){if(_pcT)clearTimeout(_pcT);_pcT=setTimeout(()=>{_pcT=null;save('ck');},400);}
+function prodRow(name){const m=prodCostMap();m[name]=m[name]||{batch:'',packs:''};return m[name];}
+function prodPer(name){const r=prodRow(name);const b=+r.batch||0,p=+r.packs||0;return p>0?b/p:0;}
+function prodRecalc(name,i){const el=document.getElementById('pcr-'+i);if(el)el.textContent=money(prodPer(name));}
+function setProdBatch(name,i,v){prodRow(name).batch=v;prodRecalc(name,i);prodSave();}
+function setProdPacks(name,i,v){prodRow(name).packs=v;prodRecalc(name,i);prodSave();}
+function prodCostHTML(){
+  const w=canW('ck');const zh=LANG==="zh";
+  const sup=prodCentralSup();const cat=ensureGridCat(sup);
+  const rows=cat.map((c,i)=>{const r=prodRow(c.name);
+    return `<tr>
+      <td class="pcid">${oEsc(c.code||'')}</td>
+      <td class="pcname">${oEsc(c.name)}</td>
+      <td class="pcid">${oEsc(c.uom||'')}</td>
+      <td class="pcid" style="font-weight:400;color:#64748b;">${oEsc(c.spec||'')}</td>
+      <td class="pcnum"><input inputmode="decimal" placeholder="0" value="${oEsc(r.batch)}" ${w?'':'disabled'} oninput="setProdBatch('${gEsc(c.name)}',${i},this.value)"></td>
+      <td class="pcnum"><input inputmode="decimal" placeholder="0" value="${oEsc(r.packs)}" ${w?'':'disabled'} oninput="setProdPacks('${gEsc(c.name)}',${i},this.value)"></td>
+      <td class="pcresult" id="pcr-${i}">${money(prodPer(c.name))}</td>
+    </tr>`;}).join('')||`<tr><td colspan="7" class="empty">${zh?"暂无品项（品项取自中央厨房订货单/进货单的 TCY OKR）":"No items"}</td></tr>`;
+  const hint=`<div class="hint">${zh?"填『大锅成本』(煮一大锅的总成本) 与『散装/单包 包数』(分装成几包)，系统自动算『单包成本』= 大锅成本 ÷ 包数。品项取自中央厨房订货单。":"Batch cost ÷ packs = cost per pack."} <span class="mini" style="opacity:.6;">build ${BUILD}</span></div>`;
+  return hint+`<div class="gwrap"><table class="pctbl"><thead><tr>
+    <th>CODE</th><th>${zh?"品名":"Item"}</th><th>${zh?"单位":"Unit"}</th><th>${zh?"规格/送货":"Pack"}</th>
+    <th>${zh?"大锅成本 RM":"Batch Cost"}</th><th>${zh?"散装/单包 (包数)":"Packs"}</th><th>${zh?"单包成本 RM":"Cost/Pack"}</th>
+  </tr></thead><tbody>${rows}</tbody></table></div>`;
+}
 function pgCK(){
   const isCK=outletObj().ck;
-  const canProd=can('ck'); // 生产：仅拥有中央厨房权限的角色(老板/区域副经理/厨师长)
-  if(!canProd)ckTab='order'; // 店长等仅订货表角色，强制订货表页
-  const tabs=canProd?`<div class="seg" style="margin-bottom:10px;flex-wrap:wrap;"><button class="${ckTab==='prod'?'active':''}" onclick="setCkTab('prod')">🏭 ${LANG==="zh"?"生产":"Production"}</button><button class="${ckTab==='order'?'active':''}" onclick="setCkTab('order')">📋 ${LANG==="zh"?"订货表":"Order List"}</button></div>`:'';
-  const head=`<h2 class="h" style="margin-top:2px;">🏭 ${LANG==="zh"?"中央厨房":"Central Kitchen"} <span class="tag">${nm(outletObj())}</span></h2>${tabs}`;
-  if(ckTab==='order'||!canProd)return head+orderListHTML();
-  return head+`
-  ${!isCK?`<div class="hint">⚠️ ${LANG==="zh"?"请先在右上角切换到「中央厨房」再进行生产。":"Switch to Central Kitchen first."}</div>`:`<div class="hint">${LANG==="zh"?"用原料生产半成品/成品，自动扣原料、成品入库、算单位成本，再配送到分店。":"Produce & distribute."}</div>`}
-  ${isCK&&canW('ck')?`<button class="btn block" style="background:var(--purple);margin-bottom:12px;" onclick="openM('production')">🏭 ${LANG==="zh"?"新增生产工单":"New Production"}</button>`:''}
-  <div class="card tbl"><table><thead><tr><th>${LANG==="zh"?"日期":"Date"}</th><th>${LANG==="zh"?"成品":"Product"}</th><th>${LANG==="zh"?"产出":"Qty"}</th><th>${LANG==="zh"?"成本":"Cost"}</th></tr></thead><tbody>
-  ${d().moves.filter(m=>m.type==='production').map(m=>`<tr><td class="mini">${m.date.slice(5)}</td><td>${m.item}</td><td>${num(m.qty)} ${m.unit||''}</td><td>${money(m.amt)}</td></tr>`).join('')||`<tr><td colspan="4" class="empty">${LANG==="zh"?"暂无生产记录":"None"}</td></tr>`}
-  </tbody></table></div>`;
+  const head=`<h2 class="h" style="margin-top:2px;">🏭 ${LANG==="zh"?"中央厨房 · 生产成本":"Central Kitchen · Production Cost"} <span class="tag">${nm(outletObj())}</span></h2>`;
+  if(!isCK)return head+`<div class="hint">⚠️ ${LANG==="zh"?"请先在右上角切换到「中央厨房」查看/录入生产成本。":"Switch to Central Kitchen first."}</div>`;
+  return head+prodCostHTML();
 }
 
 /* 盘点（独立页）*/
