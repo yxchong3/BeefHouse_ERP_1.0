@@ -533,7 +533,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
-const BUILD="0912e";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
+const BUILD="0912f";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -1285,9 +1285,6 @@ function pgDash(){
   <div class="card tbl"><table><thead><tr><th>${LANG==="zh"?"分店":"Branch"}</th><th>${LANG==="zh"?"净营业额":"Net Sales"}</th><th>${LANG==="zh"?"估算净利":"Est. Profit"}</th></tr></thead><tbody>
     ${compare.map(c=>`<tr><td>${c.name}</td><td>${money(c.net)}</td><td class="${c.np>=0?'pos':'neg'}">${money(c.np)}</td></tr>`).join('')}
   </tbody></table></div>
-
-  <h2 class="h">⚠️ ${LANG==="zh"?"需要注意":"Alerts"}</h2>
-  ${renderAlerts()}
   `;
 }
 function renderAlerts(){
@@ -1349,6 +1346,9 @@ function pgInv(){
     }).join('')||`<div class="empty">${zh?"暂无品项，先在采购或此页导入。":"No items"}</div>`;
     return `<div class="fb"><h2 class="h" style="margin:0;">📦 ${zh?"库存清单":"Inventory"} <span class="tag">${nm(outletObj())}</span></h2>${addBtns}</div>
       <div class="hint">${zh?"👉 功能：看每样食材还剩多少、值多少钱(按供应商分组)。进货会自动加、卖出/报废/调拨会自动减，剩太少会提醒你订货。":"See how much of each item is left & its value; auto-adjusts on purchase/sale/waste."}</div>
+      <h2 class="h" style="margin-top:2px;">⚠️ ${zh?"需要注意":"Alerts"}</h2>
+      ${renderAlerts()}
+      <h2 class="h">${zh?"库存(按供应商)":"Inventory by Supplier"}</h2>
       ${cards}`;
   }
   // —— 单一供应商库存视图 ——
