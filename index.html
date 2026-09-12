@@ -38,6 +38,14 @@
   .gtbl td.gprice,.gtbl th.gprice{position:sticky;left:430px;z-index:2;min-width:76px;max-width:76px;box-shadow:1px 0 0 #333;}
   .gtbl thead th.gcode{z-index:4;background:#E8EDF3;}
   .gtbl thead th.gname,.gtbl thead th.gunit,.gtbl thead th.gpack,.gtbl thead th.gprice{z-index:4;background:#E8EDF3;}
+  /* 识别列/表头行：Code·品名·单位·规格·单价 用统一浅蓝底，一眼区分录入区 */
+  .gtbl td.gcode,.gtbl td.gunit,.gtbl td.gpack,.gtbl td.gprice{background:#F3F6FB;}
+  .gtbl td.gname{background:#EDF2F9;}
+  /* ≤10 布局上方四行(Code/单价RM/单位/规格) */
+  .gtbl tr.ghdr td{background:#EDF2F9;}
+  .gtbl tr.ghdr input{font-weight:600;color:#12203A;text-align:center;}
+  .gtbl tr.ghdr td.ghlab{background:#DCE5F1;font-weight:800;color:#12203A;text-align:center;padding:7px 6px;}
+  .gtbl tr.ghdr-end td{border-bottom:2px solid #333;}
   .gtbl td.gtot{background:#FAFBFC;font-weight:700;text-align:right;padding:6px 8px;}
   .gtbl tr.gsum td{background:#F2F4F7;font-weight:800;padding:6px 8px;}
   .gtbl td.gdate,.gtbl th.gdate{position:sticky;left:0;z-index:2;min-width:64px;max-width:64px;text-align:center;box-shadow:1px 0 0 #333;background:#fff;}
@@ -496,7 +504,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
-const BUILD="0911f";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
+const BUILD="0912a";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -2658,10 +2666,10 @@ function gridTable(mod,sup,month){
   }
   // ≤10：行=日期（整月每天），列=品项；上方 单价 / 单位 / 规格 行；日期冻结在左边
   const head=`<th class="gdate">${zh?"日期":"Date"}</th><th>Invoice No.</th>`+items.map(it=>`<th>${w?`<input style="font-weight:700;min-width:90px;" value="${it}" onchange="setGridName('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"> <span class="ib" onclick="delGridItem('${mod}','${gEsc(sup)}','${gEsc(it)}','${month}')">×</span>`:it}</th>`).join('')+`<th>${zh?"当日RM":"Amt"}</th>`;
-  const codeRow=`<tr><td class="gdate" style="font-weight:700;">Code</td><td></td>${items.map(it=>`<td><input value="${(cat.find(x=>x.name===it)||{}).code||''}" ${w?'':'disabled'} onchange="setGridCode('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
-  const priceRow=`<tr><td class="gdate" style="font-weight:700;">${zh?"单价RM":"Price"}</td><td></td>${items.map(it=>`<td><input type="number" step="0.01" value="${price(it)}" ${w?'':'disabled'} onchange="setGridPrice('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
-  const uomRow=`<tr><td class="gdate" style="font-weight:700;">${zh?"单位":"Unit"}</td><td></td>${items.map(it=>`<td><input value="${uom(it)}" ${w?'':'disabled'} onchange="setGridUom('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
-  const specRow=`<tr><td class="gdate" style="font-weight:700;">${zh?"规格":"Pack"}</td><td></td>${items.map(it=>`<td><input placeholder="10kg x 6/ctn" value="${spec(it)}" ${w?'':'disabled'} onchange="setGridSpec('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
+  const codeRow=`<tr class="ghdr"><td class="gdate ghlab">Code</td><td></td>${items.map(it=>`<td><input value="${(cat.find(x=>x.name===it)||{}).code||''}" ${w?'':'disabled'} onchange="setGridCode('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
+  const priceRow=`<tr class="ghdr"><td class="gdate ghlab">${zh?"单价RM":"Price"}</td><td></td>${items.map(it=>`<td><input type="number" step="0.01" value="${price(it)}" ${w?'':'disabled'} onchange="setGridPrice('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
+  const uomRow=`<tr class="ghdr"><td class="gdate ghlab">${zh?"单位":"Unit"}</td><td></td>${items.map(it=>`<td><input value="${uom(it)}" ${w?'':'disabled'} onchange="setGridUom('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
+  const specRow=`<tr class="ghdr ghdr-end"><td class="gdate ghlab">${zh?"规格":"Pack"}</td><td></td>${items.map(it=>`<td><input placeholder="10kg x 6/ctn" value="${spec(it)}" ${w?'':'disabled'} onchange="setGridSpec('${mod}','${gEsc(sup)}','${gEsc(it)}',this.value)"></td>`).join('')}<td></td></tr>`;
   const body=dates.map((dt,j)=>{const dayAmt=items.reduce((s,it)=>s+(+q(it,dt)||0)*price(it),0);return `<tr><td class="gdate">${dt.slice(5)}</td><td>${w?`<input placeholder="Invoice No." value="${inv(dt)}" onchange="setGridInv('${mod}','${gEsc(sup)}','${dt}',this.value)">`:(inv(dt)||'—')}</td>${items.map((it,i)=>`<td class="gcell"><input type="number" step="0.01" value="${q(it,dt)}" ${w?'':'disabled'} oninput="setGridQty('${mod}','${gEsc(sup)}','${gEsc(it)}','${dt}',this.value)"></td>`).join('')}<td class="gtot" id="gtd-${j}">${money(dayAmt)}</td></tr>`;}).join('')||`<tr><td colspan="${items.length+3}" class="empty">${zh?"点『+ 品项』添加品项":"Add items"}</td></tr>`;
   return `${controls}<div class="gwrap"><table class="gtbl"><thead><tr>${head}</tr></thead><tbody>${items.length?codeRow+priceRow+uomRow+specRow:''}${body}<tr class="gsum"><td class="gdate">${zh?"合计":"Total"}</td><td></td>${items.map((it,i)=>`<td id="gta-${i}">${money(rAmt(it))}</td>`).join('')}<td id="gtg">${money(grand)}</td></tr></tbody></table></div>`;
 }
