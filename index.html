@@ -554,7 +554,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
-const BUILD="0912h";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
+const BUILD="0912i";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -1390,7 +1390,8 @@ function pgProc(){
   // 六大作业各自独立界面（中枢导航卡）
   const cards=[];
   if(can('proc')){
-    cards.push(["purchase","📥",LANG==="zh"?"采购进货":"Purchases",LANG==="zh"?"按供应商 · 每年月日进货单":"By supplier · dated invoices",var_green()]);
+    cards.push(["ordersheet","🛒",LANG==="zh"?"订货单":"Order Sheet",LANG==="zh"?"按供应商下单 · 通知老板/副经理":"By supplier · notify boss",var_amber()]);
+    cards.push(["purchase","📥",LANG==="zh"?"进货单":"Goods-In",LANG==="zh"?"按供应商 · 每年月日进货记录":"By supplier · dated records",var_green()]);
     cards.push(["grn","📋",LANG==="zh"?"验收 / 退货/补货":"GRN / Returns",LANG==="zh"?"按供应商 · 含补货/免费/取消":"By supplier · settlement",var_blue()]);
   }
   if(can('transfer'))cards.push(["transfer","🔁",LANG==="zh"?"跨店调拨":"Transfer",LANG==="zh"?"物品调拨 + 人力借调":"Items + staff loans",var_navy()]);
@@ -2137,7 +2138,7 @@ function openOrdersPanel(){
       <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
         <div style="font-weight:800;">🧑 ${oEsc(o.by&&o.by.name||'-')} <span class="mini" style="font-weight:400;">(${oEsc(ROLES[o.by&&o.by.role]?ROLES[o.by.role].name:(o.by&&o.by.role||''))})</span></div>
         <div class="mini">${oEsc(o.outletName||'')} · ${when}</div></div>
-      <div class="mini" style="margin-top:2px;">${LANG==="zh"?"共":"Total"} ${(o.lines||[]).length+(o.uniform||[]).length} ${LANG==="zh"?"项":"items"}</div>
+      <div class="mini" style="margin-top:2px;">${o.supplier?`🏢 ${oEsc(o.supplier)} · `:''}${LANG==="zh"?"共":"Total"} ${(o.lines||[]).length+(o.uniform||[]).length} ${LANG==="zh"?"项":"items"}</div>
       ${orderLineHTML(o)}
       <div style="text-align:right;margin-top:6px;"><button class="btn ghost sm" onclick="deleteOrder('${o.id}')">🗑️ ${LANG==="zh"?"删除":"Delete"}</button></div>
     </div>`;}).join(''):`<div class="empty">${LANG==="zh"?"暂无订单":"No orders yet"}</div>`;
@@ -2148,6 +2149,73 @@ function openOrdersPanel(){
 }
 async function deleteOrder(id){if(!confirm(LANG==="zh"?"删除此订单记录？":"Delete this order?"))return;await loadOrders();ORDERS=ORDERS.filter(o=>o.id!==id);await saveOrders();openOrdersPanel();}
 
+/* ---------- 订货单（按供应商，无照片，风格同中央厨房订货表）---------- */
+function isCkOrderSup(s){return (s||'').toUpperCase().includes('TCY OKR');}
+function osData(sup){
+  d().orderSheets=d().orderSheets||{};
+  if(!d().orderSheets[sup]){
+    const cat=ensureGridCat(sup);
+    d().orderSheets[sup]=cat.map(c=>({d:c.name+(c.spec?('\n'+c.spec):''),q:''}));
+  }
+  return d().orderSheets[sup];
+}
+let _osT=null;
+function osSave(){if(_osT)clearTimeout(_osT);_osT=setTimeout(()=>{_osT=null;save();},400);}
+function setOsQty(sup,i,v){osData(sup)[i].q=v;osSave();}
+function setOsDesc(sup,i,v){osData(sup)[i].d=v;osSave();}
+async function addOsItem(sup){osData(sup).push({d:'',q:''});await save();render();}
+async function delOsItem(sup,i){const a=osData(sup);const it=a[i];if(!confirm(LANG==="zh"?("移除『"+((it.d||'').split('\n')[0])+"』？"):"Remove item?"))return;a.splice(i,1);await save();render();}
+async function osReset(sup){if(!confirm(LANG==="zh"?"还原此供应商订货单为原始品项？（会清空数量）":"Reset this sheet?"))return;d().orderSheets=d().orderSheets||{};delete d().orderSheets[sup];await save();render();}
+async function submitSheetOrder(sup){
+  const a=osData(sup);
+  const lines=a.filter(it=>String(it.q||'').trim()!=='').map(it=>({d:it.d,q:it.q}));
+  if(!lines.length){alert(LANG==="zh"?"请先填数量再下单。":"Enter quantities first.");return;}
+  if(!confirm((LANG==="zh"?("确定向 "+sup+" 下单？共 "+lines.length+" 项。"):("Order to "+sup+"? "+lines.length+" items."))))return;
+  if(!confirm((LANG==="zh"?"再次确认：提交后会通知老板与区域副经理。确定提交？":"Confirm again: owner & area manager notified. Submit?")))return;
+  const by=curUser?{name:curUser.name,email:curUser.email,role:curRole}:{name:ROLES[curRole].name,email:'',role:curRole};
+  const order={id:Date.now()+'-'+Math.random().toString(36).slice(2,6),ts:Date.now(),by,outlet:curOutlet,outletName:nm(outletObj()),supplier:sup,lines,uniform:[],status:'pending'};
+  await loadOrders();ORDERS.push(order);await saveOrders();
+  try{if(typeof auditLog==='function')auditLog(LANG==="zh"?"订货提交":"Order",sup+" · "+by.name+" · "+lines.length+(LANG==="zh"?"项":" items"),"","");}catch(e){}
+  alert(LANG==="zh"?("✅ 已向 "+sup+" 下单！共 "+lines.length+" 项，已通知老板与区域副经理。"):("✅ Order to "+sup+" placed."));
+}
+function osTable(sup){
+  const wDesc=['owner','area'].includes(curRole)&&!isAgg();
+  const wQty=subCanW('ordersheet');
+  const a=osData(sup);const sz=ordSize();
+  const cols=1+1+(wDesc?1:0);
+  const rows=a.map((it,i)=>`<tr>`+
+    `<td class="odesc">${wDesc?`<div class="odesc-edit" contenteditable="true" spellcheck="false" onblur="setOsDesc('${gEsc(sup)}',${i},this.innerText)">${oEsc(it.d)}</div>`:`<div class="odesc-view">${oEsc(it.d).replace(/\n/g,'<br>')}</div>`}</td>`+
+    `<td class="oqty"><input inputmode="decimal" value="${oEsc(it.q)}" ${wQty?'':'disabled'} oninput="setOsQty('${gEsc(sup)}',${i},this.value)"></td>`+
+    (wDesc?`<td class="odel"><span class="ib" onclick="delOsItem('${gEsc(sup)}',${i})">🗑️</span></td>`:'')+
+  `</tr>`).join('')||`<tr><td colspan="${cols}" class="empty">${LANG==="zh"?"暂无品项，点『+品项』添加":"No items"}</td></tr>`;
+  const submitBtn=wQty?`<button class="btn brand sm" onclick="submitSheetOrder('${gEsc(sup)}')">🛒 ${LANG==="zh"?"下单":"Place Order"}</button>`:'';
+  const sizeCtl=`<div class="seg sm" style="margin:0;"><button class="${sz==='s'?'active':''}" onclick="setOrdSize('s')">${LANG==="zh"?"小":"S"}</button><button class="${sz==='m'?'active':''}" onclick="setOrdSize('m')">${LANG==="zh"?"中":"M"}</button><button class="${sz==='l'?'active':''}" onclick="setOrdSize('l')">${LANG==="zh"?"大":"L"}</button></div>`;
+  const bar=`<div class="fb" style="align-items:center;flex-wrap:wrap;gap:8px;"><div class="obanner">${oEsc(sup)} · ${LANG==="zh"?"订货单":"Order Sheet"}</div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="mini" style="opacity:.7;">${LANG==="zh"?"大小":"Size"}</span>${sizeCtl}${submitBtn}<button class="btn ghost sm" onclick="printOrder()">🖨️ ${LANG==="zh"?"打印":"Print"}</button>${wDesc?`<button class="btn ghost sm" onclick="osReset('${gEsc(sup)}')">↩︎ ${LANG==="zh"?"还原":"Reset"}</button>`:''}</div></div>`;
+  const hint=`<div class="hint">${LANG==="zh"?"填『数量 QTY』后按『🛒 下单』提交（会通知老板与区域副经理）。":"Fill QTY then Place Order (owner & area notified)."}${wDesc?(LANG==="zh"?" 品名可改，可『+品项』或🗑️删除。":""):''} <span class="mini" style="opacity:.6;">build ${BUILD}</span></div>`;
+  const addBtn=wDesc?`<button class="btn ghost sm oadd" onclick="addOsItem('${gEsc(sup)}')">+ ${LANG==="zh"?"品项":"Item"}</button>`:'';
+  return bar+hint+`<div class="orderroot size-${sz}"><div class="ocol" style="max-width:640px;"><table class="otbl"><thead><tr><th class="odesc">DESCRIPTION</th><th class="oqty">QTY.</th>${wDesc?'<th class="odel"></th>':''}</tr></thead><tbody>${rows}</tbody></table>${addBtn}</div></div>`;
+}
+function pgOrderSheet(){
+  const back=`<button class="btn ghost sm" onclick="nav('proc')">← ${LANG==="zh"?"进销存作业":"Operations"}</button>`;
+  if(!selSupplier){
+    const sups=supplierList();
+    const cards=sups.map(v=>{
+      const isck=isCkOrderSup(v.name);
+      return `<div class="card" style="padding:13px;margin-bottom:9px;cursor:pointer;" onclick="setSupplier('${v.name.replace(/'/g,"\\'")}')">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:800;font-size:15px;">🏢 ${v.name}${isck?` <span class="tag">${LANG==="zh"?"含图片":"photos"}</span>`:''}</div>
+          <div class="mini">${LANG==="zh"?"点进去下单":"Tap to order"}</div></div>
+          <div><span class="mini">›</span></div>
+        </div></div>`;
+    }).join('')||`<div class="empty">${LANG==="zh"?"暂无供应商，请先在『进货单』新增供应商。":"No suppliers"}</div>`;
+    return `<div class="fb"><h2 class="h" style="margin:0;">🛒 ${LANG==="zh"?"订货单":"Order Sheet"} <span class="tag">${nm(outletObj())}</span></h2>${back}</div>
+      <div class="hint">${LANG==="zh"?"点选供应商 → 填数量 → 🛒下单（会通知老板与区域副经理）。中央厨房 (TCY OKR) 含图片版。":"Pick supplier → qty → order."}</div>
+      ${cards}`;
+  }
+  const supHead=`<div class="fb"><h2 class="h" style="margin:0;">🛒 ${selSupplier}</h2><button class="btn ghost sm" onclick="backSupplier()">← ${LANG==="zh"?"供应商列表":"Suppliers"}</button></div>`;
+  if(isCkOrderSup(selSupplier))return supHead+orderListHTML();   // 中央厨房订货表（有照片）
+  return supHead+osTable(selSupplier);
+}
 function pgCK(){
   const isCK=outletObj().ck;
   const canProd=can('ck'); // 生产：仅拥有中央厨房权限的角色(老板/区域副经理/厨师长)
@@ -2660,7 +2728,7 @@ let ledgerMonth='all';                         // 账册月份筛选（YYYY-MM �
 let gridCurMonth='';                            // 当前网格实际渲染的月份（合计计算以此为准，避免 ledgerMonth='all' 导致合计归零）
 function setLedgerMonth(v){ledgerMonth=v;render();window.scrollTo(0,0);}
 function monthLabel(ymk){if(ymk==='all')return LANG==="zh"?"全部月份":"All months";const[y,m]=ymk.split('-');return LANG==="zh"?(y+"年"+(+m)+"月"):(ymk);}
-const PROC_SUB={purchase:'proc',grn:'proc',transfer:'transfer',waste2:'waste',offer:'ent',monthend:'stock'};
+const PROC_SUB={ordersheet:'proc',purchase:'proc',grn:'proc',transfer:'transfer',waste2:'waste',offer:'ent',monthend:'stock'};
 function subCan(p){return PROC_SUB[p]?can(PROC_SUB[p]):can(p);}   // 子页读权限
 function subCanW(p){return PROC_SUB[p]?canW(PROC_SUB[p]):canW(p);}// 子页写权限（汇总视图只读）
 function setSupplier(n){selSupplier=n;ledgerMonth='all';render();window.scrollTo(0,0);}
@@ -2773,7 +2841,7 @@ function itemSummary(recs){
 
 /* ================= 供应商钻取账册（采购 / 验收退货 / 月末算货 共用）================= */
 function ledgerCfg(mod){return ({
-  purchase:{arr:'purchases',icon:"📥",title:LANG==="zh"?"采购进货":"Purchases",hasSettle:false,byMonth:false,form:'formLedger'},
+  purchase:{arr:'purchases',icon:"📥",title:LANG==="zh"?"进货单":"Goods-In",hasSettle:false,byMonth:false,form:'formLedger'},
   grn:{arr:'grn',icon:"📋",title:LANG==="zh"?"验收 / 退货/补货":"GRN / Returns",hasSettle:true,byMonth:false,form:'formLedger'},
   monthend:{arr:'monthEnd',icon:"🧮",title:LANG==="zh"?"月末算货":"Month-End Count",hasSettle:false,byMonth:true,form:'formLedger'},
 })[mod];}
@@ -3075,7 +3143,7 @@ function pgMonthEnd(){return pgLedger('monthend');}
 
 /* 页面路由补充（ap/opex 不在底部tab，用函数导航） */
 const _pages={dash:pgDash,sales:pgSales,inv:pgInv,proc:pgProc,bom:pgBom,report:pgReport,settings:pgSettings,ap:pgAp,opex:pgOpex,payroll:pgPayroll,hr:pgHR,attend:pgAttend,schedule:pgSchedule,leave:pgLeave,ck:pgCK,stock:pgStock,
-  purchase:pgPurchase,grn:pgGRN,transfer:pgTransfer,waste2:pgWaste2,offer:pgOffer,monthend:pgMonthEnd,monthly:pgMonthly};
+  purchase:pgPurchase,grn:pgGRN,transfer:pgTransfer,waste2:pgWaste2,offer:pgOffer,monthend:pgMonthEnd,monthly:pgMonthly,ordersheet:pgOrderSheet};
 function render(){
   if(!pageAllowed(curPage)){curPage=firstAllowedPage();selSupplier=null;} // 权限收紧后自动落到可访问页
   renderTop();renderSidebar();
