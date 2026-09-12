@@ -104,6 +104,11 @@
   .pctbl td.pcnum input{width:100%;border:0;text-align:center;font:inherit;font-weight:700;background:transparent;padding:8px 4px;box-sizing:border-box;}
   .pctbl td.pcnum input:focus{outline:2px solid var(--gold);outline-offset:-2px;background:#FFFBEB;}
   .pctbl td.pcresult{font-weight:800;text-align:right;background:#FAFBFC;color:#0f766e;}
+  .pctbl td.pcedit{padding:0;}
+  .pctbl td.pcedit input{width:100%;border:0;text-align:center;font:inherit;background:transparent;padding:6px 6px;box-sizing:border-box;}
+  .pctbl td.pcname.pcedit input{text-align:left;font-weight:700;}
+  .pctbl td.pcedit input:focus{outline:2px solid var(--gold);outline-offset:-2px;background:#FFFBEB;}
+  .pctbl td.pcdel{text-align:center;width:36px;background:#fff;}
   .gtbl td.gtot{background:#FAFBFC;font-weight:700;text-align:right;padding:6px 8px;}
   .gtbl tr.gsum td{background:#F2F4F7;font-weight:800;padding:6px 8px;}
   .gtbl td.gdate,.gtbl th.gdate{position:sticky;left:0;z-index:2;min-width:64px;max-width:64px;text-align:center;box-shadow:1px 0 0 #333;background:#fff;}
@@ -564,7 +569,7 @@ function statusOf(d){if(d<=14)return{t:"健康",e:"Fresh",c:"p-g"};if(d<=30)retu
 function stTxt(s){return LANG==="zh"?s.t:s.e;}
 
 /* ================= 数据种子 ================= */
-const BUILD="0912j";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
+const BUILD="0912k";  // 版本标记：页面右上/网格提示可见，用来确认已载入最新版
 const SEED_VERSION="bh-master-2026-09-1";  // 版本变更→下次载入自动重置为最新主数据（仅本店云端）
 function seed(outletId){
   const isCK = outletId==="ck";
@@ -2089,36 +2094,52 @@ function orderListHTML(){
 }
 
 /* ---------- 订单提交 + 通知 ---------- */
-let ORDERS=[]; let _ordPollT=null; let _lastNotifiedTs=0;
+let ORDERS=[]; let _ordPollT=null; let _audioCtx=null;
 async function loadOrders(){try{const r=await Store.get('erpv2:orders');ORDERS=r?JSON.parse(r.value):[];}catch(e){ORDERS=[];}}
 async function saveOrders(){try{await Store.set('erpv2:orders',JSON.stringify(ORDERS));}catch(e){}}
 function ordSeenKey(){return 'ordSeen:'+((curUser&&curUser.email)||'demo');}
+function ordNotifKey(){return 'ordNotified:'+((curUser&&curUser.email)||'demo');}
+function getNotified(){try{return JSON.parse(localStorage.getItem(ordNotifKey())||'{}');}catch(e){return {};}}
+function setNotified(m){try{localStorage.setItem(ordNotifKey(),JSON.stringify(m));}catch(e){}}
 function orderUnreadCount(){if(!['owner','area'].includes(curRole))return 0;const seen=+(localStorage.getItem(ordSeenKey())||0);return ORDERS.filter(o=>o.ts>seen).length;}
 function markOrdersSeen(){const latest=ORDERS.reduce((m,o)=>Math.max(m,o.ts),0);localStorage.setItem(ordSeenKey(),String(latest));updateBell();}
 function updateBell(){const bell=document.getElementById('bellBtn');if(!bell)return;const show=['owner','area'].includes(curRole);bell.style.display=show?'':'none';const n=orderUnreadCount();const bc=document.getElementById('bellCount');if(bc){bc.style.display=n?'':'none';bc.textContent=n>99?'99+':n;}}
-function reqNotify(){if(!('Notification'in window)){alert(LANG==="zh"?"此浏览器不支持通知":"Notifications unsupported");return;}Notification.requestPermission().then(p=>{alert(p==='granted'?(LANG==="zh"?"✅ 已开启通知，有新订单会弹出提醒。":"Notifications on."):(LANG==="zh"?"未开启通知（可在浏览器设置里允许）。":"Not granted."));updateBell();});}
+/* 提示音：三声上升“叮叮叮”（WebAudio，无需音频文件）*/
+function primeAudio(){try{_audioCtx=_audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(_audioCtx.state==='suspended')_audioCtx.resume();}catch(e){}}
+function playBeep(){
+  try{primeAudio();if(!_audioCtx)return;const now=_audioCtx.currentTime;
+    [[880,0],[1175,0.16],[1568,0.32]].forEach(([f,t])=>{const o=_audioCtx.createOscillator(),g=_audioCtx.createGain();o.connect(g);g.connect(_audioCtx.destination);o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0.0001,now+t);g.gain.exponentialRampToValueAtTime(0.4,now+t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,now+t+0.15);o.start(now+t);o.stop(now+t+0.17);});
+  }catch(e){}
+}
+function reqNotify(){primeAudio();if(!('Notification'in window)){alert(LANG==="zh"?"此浏览器不支持通知":"Notifications unsupported");return;}Notification.requestPermission().then(p=>{if(p==='granted')playBeep();alert(p==='granted'?(LANG==="zh"?"✅ 已开启通知与提示音，有新订单会响铃并弹出提醒。":"Notifications on."):(LANG==="zh"?"未开启通知（可在浏览器设置里允许）。":"Not granted."));updateBell();});}
 let _swReg=null;
-function fireNotify(order){
+function fireNotify(order,extra){
   if(!('Notification'in window)||Notification.permission!=='granted')return;
-  const title=LANG==="zh"?'🔔 新订单 New Order':'🔔 New Order';
-  const body=(order.by&&order.by.name||'')+' · '+order.outletName+' · '+((order.lines||[]).length+(order.uniform||[]).length)+(LANG==="zh"?' 项':' items');
-  const opt={body,tag:'order-'+order.id};if(BH_ICON){opt.icon=BH_ICON;opt.badge=BH_ICON;}
+  const more=(extra&&extra>1)?(LANG==="zh"?(' 等'+extra+'单'):(' +'+(extra-1))):'';
+  const title=(LANG==="zh"?'🔔 新订单 New Order':'🔔 New Order')+more;
+  const body=(order.by&&order.by.name||'')+' · '+(order.supplier?order.supplier+' · ':'')+order.outletName+' · '+((order.lines||[]).length+(order.uniform||[]).length)+(LANG==="zh"?' 项':' items');
+  const opt={body,tag:'order-'+order.id,renotify:true};if(BH_ICON){opt.icon=BH_ICON;opt.badge=BH_ICON;}
   try{
     if(_swReg&&_swReg.showNotification){_swReg.showNotification(title,opt);}   // 手机(Android/已安装)前台可弹
     else{new Notification(title,opt);}                                          // 桌面浏览器
   }catch(e){try{if(_swReg)_swReg.showNotification(title,opt);}catch(_){}}
 }
+/* 按订单ID逐单去重：每一张新单都会响铃+弹通知（不再只弹第一次）*/
 function notifyNewOrders(silent){
   updateBell();
   if(!['owner','area'].includes(curRole))return;
-  const latest=ORDERS.length?ORDERS.reduce((a,o)=>o.ts>a.ts?o:a):null;
-  if(!latest)return;
-  const seen=+(localStorage.getItem(ordSeenKey())||0);
-  if(!silent && latest.ts>seen && latest.ts>_lastNotifiedTs){_lastNotifiedTs=latest.ts;fireNotify(latest);
-    const host=document.getElementById('pageHost');if(host){const bn=document.createElement('div');bn.className='al al-a';bn.style.cssText='position:fixed;right:16px;bottom:16px;max-width:300px;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.2);cursor:pointer;';bn.innerHTML=`<div class="t">🔔 ${LANG==="zh"?"新订单":"New order"}</div>${(latest.by&&latest.by.name||'')} · ${latest.outletName}`;bn.onclick=()=>{openOrdersPanel();bn.remove();};document.body.appendChild(bn);setTimeout(()=>bn.remove(),8000);}
-  }
+  const done=getNotified();
+  const fresh=ORDERS.filter(o=>o&&o.id&&!done[o.id]);
+  if(!fresh.length)return;
+  fresh.forEach(o=>done[o.id]=1);setNotified(done);
+  if(silent)return; // 登录首次：只标记已有订单为已通知，不弹（避免刷屏）
+  fresh.sort((a,b)=>a.ts-b.ts);const latest=fresh[fresh.length-1];
+  playBeep();fireNotify(latest,fresh.length);
+  const bn=document.createElement('div');bn.className='al al-a';bn.style.cssText='position:fixed;right:16px;bottom:16px;max-width:320px;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.2);cursor:pointer;';
+  bn.innerHTML=`<div class="t">🔔 ${LANG==="zh"?"新订单":"New order"}${fresh.length>1?` ×${fresh.length}`:''}</div>${(latest.by&&latest.by.name||'')} · ${latest.supplier?oEsc(latest.supplier)+' · ':''}${latest.outletName}`;
+  bn.onclick=()=>{openOrdersPanel();bn.remove();};document.body.appendChild(bn);setTimeout(()=>bn.remove(),9000);
 }
-function startOrderPoll(){if(_ordPollT)clearInterval(_ordPollT);if(!CLOUD)return;_ordPollT=setInterval(async()=>{if(!['owner','area'].includes(curRole))return;await loadOrders();notifyNewOrders();},60000);}
+function startOrderPoll(){if(_ordPollT)clearInterval(_ordPollT);if(!CLOUD)return;_ordPollT=setInterval(async()=>{if(!['owner','area'].includes(curRole))return;await loadOrders();notifyNewOrders();},30000);}
 async function submitOrder(){
   const o=orderView();
   const gather=k=>(o[k]||[]).filter(it=>!it.divider&&String(it.q||'').trim()!=='').map(it=>({d:it.d,q:it.q}));
@@ -2237,24 +2258,33 @@ function prodPer(name){const r=prodRow(name);const b=+r.batch||0,p=+r.packs||0;r
 function prodRecalc(name,i){const el=document.getElementById('pcr-'+i);if(el)el.textContent=money(prodPer(name));}
 function setProdBatch(name,i,v){prodRow(name).batch=v;prodRecalc(name,i);prodSave();}
 function setProdPacks(name,i,v){prodRow(name).packs=v;prodRecalc(name,i);prodSave();}
+/* CODE/品名/单位/规格 可编辑、可增删（改的是中央厨房 TCY OKR 品项目录，进货单/订货单同步）*/
+function setPcCode(name,v){const c=ensureGridCat(prodCentralSup()).find(x=>x.name===name);if(c)c.code=v;prodSave();}
+function setPcUom(name,v){const c=ensureGridCat(prodCentralSup()).find(x=>x.name===name);if(c)c.uom=v;prodSave();}
+function setPcSpec(name,v){const c=ensureGridCat(prodCentralSup()).find(x=>x.name===name);if(c)c.spec=v;prodSave();}
+async function setPcName(oldName,v){const nn=(v||'').trim();if(!nn||nn===oldName)return render();const cat=ensureGridCat(prodCentralSup());if(cat.some(x=>x.name===nn)){alert(LANG==="zh"?"已有同名品项":"Name exists");return render();}const c=cat.find(x=>x.name===oldName);if(c)c.name=nn;const m=prodCostMap();if(m[oldName]){m[nn]=m[oldName];delete m[oldName];}await save('ck');render();}
+async function addPcItem(){const n=(prompt(LANG==="zh"?"新增品项名称（中/英）：":"New item name:")||'').trim();if(!n)return;const cat=ensureGridCat(prodCentralSup());if(!cat.some(x=>x.name===n))cat.push({name:n,code:'',uom:'',spec:'',price:0});await save('ck');render();}
+async function delPcItem(name){if(!confirm(LANG==="zh"?("移除品项『"+name+"』？"):"Remove item?"))return;const cat=ensureGridCat(prodCentralSup());const i=cat.findIndex(x=>x.name===name);if(i>=0)cat.splice(i,1);const m=prodCostMap();delete m[name];await save('ck');render();}
 function prodCostHTML(){
   const w=canW('ck');const zh=LANG==="zh";
   const sup=prodCentralSup();const cat=ensureGridCat(sup);
   const rows=cat.map((c,i)=>{const r=prodRow(c.name);
     return `<tr>
-      <td class="pcid">${oEsc(c.code||'')}</td>
-      <td class="pcname">${oEsc(c.name)}</td>
-      <td class="pcid">${oEsc(c.uom||'')}</td>
-      <td class="pcid" style="font-weight:400;color:#64748b;">${oEsc(c.spec||'')}</td>
+      <td class="pcid pcedit">${w?`<input value="${oEsc(c.code||'')}" onchange="setPcCode('${gEsc(c.name)}',this.value)">`:oEsc(c.code||'')}</td>
+      <td class="pcname pcedit">${w?`<input style="text-align:left;font-weight:700;" value="${oEsc(c.name)}" onchange="setPcName('${gEsc(c.name)}',this.value)">`:oEsc(c.name)}</td>
+      <td class="pcid pcedit">${w?`<input value="${oEsc(c.uom||'')}" onchange="setPcUom('${gEsc(c.name)}',this.value)">`:oEsc(c.uom||'')}</td>
+      <td class="pcid pcedit">${w?`<input placeholder="10kg x 6/ctn" value="${oEsc(c.spec||'')}" onchange="setPcSpec('${gEsc(c.name)}',this.value)">`:oEsc(c.spec||'')}</td>
       <td class="pcnum"><input inputmode="decimal" placeholder="0" value="${oEsc(r.batch)}" ${w?'':'disabled'} oninput="setProdBatch('${gEsc(c.name)}',${i},this.value)"></td>
       <td class="pcnum"><input inputmode="decimal" placeholder="0" value="${oEsc(r.packs)}" ${w?'':'disabled'} oninput="setProdPacks('${gEsc(c.name)}',${i},this.value)"></td>
       <td class="pcresult" id="pcr-${i}">${money(prodPer(c.name))}</td>
-    </tr>`;}).join('')||`<tr><td colspan="7" class="empty">${zh?"暂无品项（品项取自中央厨房订货单/进货单的 TCY OKR）":"No items"}</td></tr>`;
-  const hint=`<div class="hint">${zh?"填『大锅成本』(煮一大锅的总成本) 与『散装/单包 包数』(分装成几包)，系统自动算『单包成本』= 大锅成本 ÷ 包数。品项取自中央厨房订货单。":"Batch cost ÷ packs = cost per pack."} <span class="mini" style="opacity:.6;">build ${BUILD}</span></div>`;
+      ${w?`<td class="pcdel"><span class="ib" onclick="delPcItem('${gEsc(c.name)}')">🗑️</span></td>`:''}
+    </tr>`;}).join('')||`<tr><td colspan="${w?8:7}" class="empty">${zh?"暂无品项，点『+ 品项』添加":"No items"}</td></tr>`;
+  const hint=`<div class="hint">${zh?"填『大锅成本』(煮一大锅的总成本) 与『散装/单包 包数』(分装成几包)，系统自动算『单包成本』= 大锅成本 ÷ 包数。CODE/品名/单位/规格 都可改、可增删。":"Batch cost ÷ packs = cost per pack."} <span class="mini" style="opacity:.6;">build ${BUILD}</span></div>`;
+  const addBtn=w?`<div style="margin-top:8px;"><button class="btn gold sm" onclick="addPcItem()">+ ${zh?"品项":"Item"}</button></div>`:'';
   return hint+`<div class="gwrap"><table class="pctbl"><thead><tr>
     <th>CODE</th><th>${zh?"品名":"Item"}</th><th>${zh?"单位":"Unit"}</th><th>${zh?"规格/送货":"Pack"}</th>
-    <th>${zh?"大锅成本 RM":"Batch Cost"}</th><th>${zh?"散装/单包 (包数)":"Packs"}</th><th>${zh?"单包成本 RM":"Cost/Pack"}</th>
-  </tr></thead><tbody>${rows}</tbody></table></div>`;
+    <th>${zh?"大锅成本 RM":"Batch Cost"}</th><th>${zh?"散装/单包 (包数)":"Packs"}</th><th>${zh?"单包成本 RM":"Cost/Pack"}</th>${w?'<th></th>':''}
+  </tr></thead><tbody>${rows}</tbody></table></div>${addBtn}`;
 }
 function pgCK(){
   const isCK=outletObj().ck;
@@ -3338,6 +3368,7 @@ function confirmLogout(){
 /* ---------- init ---------- */
 (async()=>{
   if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js').then(r=>{_swReg=r;}).catch(()=>{});}
+  try{window.addEventListener('click',function(){if(typeof primeAudio==='function')primeAudio();},{once:true});}catch(e){}
   initCloud();
   if(AUTH()){
     try{const {data}=await _sb.auth.getSession();
